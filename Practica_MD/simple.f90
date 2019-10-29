@@ -44,15 +44,27 @@ program simple
        do a = 1, N
           r(1, a)  = L*uni()
           r(2, a)  = L*uni()
-          r(3, a)  = L*uni()
-          fza_int = fza_interaction()
-          print *, "Posicion de particula", a, r(1, a), r(2, a), r(3, a), fza_int
-       end do
-   end if   
+          r(3, a)  = L*uni()        
+          print *, "Posicion de particula", a, r(1, a), r(2, a), r(3, a)	       
+	end do
+ end if   
+
+	fza_int = fza_interaction()
 
 
-
+	! Condiciones de contorno para "verlet position"        
+!!	do a = 1, N
+!!	r(i, a)  = integrate()
+!! 	do i = 1,3
+!!	if (r(i, a) > L)
+!!	   r(i, a) = r(i,a) - L
+!!	if (r(i,a) < 0)
+!!	   r(i,a) = r(i, a) + L
+!!	end do
+!!	end do
 !!
+
+
 !! FIN FIN edicion
 !! 
 ![No TOCAR]
