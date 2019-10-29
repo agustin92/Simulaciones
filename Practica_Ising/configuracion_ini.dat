@@ -1,0 +1,6 @@
+! Temperatura
+10
+! Numero de pasos de montecarlo
+1000000
+! Size de la red
+20
