@@ -5,7 +5,7 @@ program simple
     logical :: es, inp
     integer :: seed,i ,j,k
     integer(kind=8) :: a, b, c
-    real(kind=8) :: fza_interaction
+!    real(kind=8) :: fza_interaction
 
 ![NO TOCAR] Inicializa generador de número random
 
@@ -50,7 +50,7 @@ program simple
     end if   
     
     print *, 'antes de calcular la fuerza', f
-    energy = fza_interaction()
+    call fza_interaction()
     print *, 'despues de calcular la fuerza', f
 
 ! Condiciones de contorno para "verlet position"        

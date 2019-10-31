@@ -1,4 +1,4 @@
-real(kind=8) function fza_interaction()
+subroutine fza_interaction()
 use verlet_positions
 #include "control.h"
 implicit none
@@ -43,8 +43,9 @@ do a = 1, N-1
     end do
 end do
 #endif
-fza_interaction = eng_int
 
-!print *, 'fuerza', f
-end function
+energy = eng_int
+
+
+end subroutine
 
