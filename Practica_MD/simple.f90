@@ -5,7 +5,7 @@ program simple
     logical :: es, inp
     integer :: seed,i ,j,k
     integer(kind=8) :: a, b, c
-    real(kind=8) :: fza_int, fza_interaction
+    real(kind=8) :: fza_interaction
 
 ![NO TOCAR] Inicializa generador de número random
 
@@ -30,7 +30,7 @@ program simple
       r = 0
       v = 0
       f = 0
-      fza_int = 0
+!     fza_int = 0
 
 !!Armo la configuración inicial de las posiciones  al azar si es que no existe el archivo input.dat
 
@@ -45,14 +45,15 @@ program simple
           r(1, a)  = L*uni()
           r(2, a)  = L*uni()
           r(3, a)  = L*uni()        
-          print *, "Posicion de particula", a, r(1, a), r(2, a), r(3, a)	       
-	end do
- end if   
+          print *, "Posicion de particula", a, r(1, a), r(2, a), r(3, a)     
+        end do
+    end if   
+    
+    print *, 'antes de calcular la fuerza', f
+    energy = fza_interaction()
+    print *, 'despues de calcular la fuerza', f
 
-	fza_int = fza_interaction()
-
-
-	! Condiciones de contorno para "verlet position"        
+! Condiciones de contorno para "verlet position"        
 !!	do a = 1, N
 !!	r(i, a)  = integrate()
 !! 	do i = 1,3

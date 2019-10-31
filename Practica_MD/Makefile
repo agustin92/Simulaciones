@@ -3,9 +3,9 @@ exe = simple
 fcomp = gfortran #ifort # /opt/intel/compiler70/ia32/bin/ifc  
 # Warning: the debugger doesn't get along with the optimization options
 # So: not use -O3 WITH -g option
-flags =  -O3  
+flags = -cpp -O3  
 # Remote compilation
-OBJS = ziggurat.o simple.o verlet_positions.o energy.o
+OBJS = ziggurat.o simple.o verlet_positions.o energy.o positions.o
 
 .SUFFIXES:            # this deletes the default suffixes 
 .SUFFIXES: .f90 .o    # this defines the extensions I want 
@@ -22,5 +22,5 @@ clean:
 	rm ./*.o ./*.mod	
 
 
-simple.o: simple.f90 ziggurat.o verlet_positions.o energy.o
+simple.o: simple.f90 ziggurat.o verlet_positions.o energy.o positions.o
 
