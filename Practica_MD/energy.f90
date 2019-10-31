@@ -1,4 +1,4 @@
-subroutine fza_interaction()
+subroutine force()
 use verlet_positions
 #include "control.h"
 implicit none
@@ -18,7 +18,7 @@ do a = 1, N-1
         rij(:) = rij(:) - L*int(2*rij(:)/L)
         distance  = norm2(rij)
         eng_int = eng_int + 4*(-1/distance**6 + 1/distance**12)
-        fza_int(:) = -4*(6*rij(:)/distance**8-12*rij(:)/distance**14)
+        fza_int(:) = 4*(6*rij(:)/distance**8-12*rij(:)/distance**14)
         f(:,a) = f(:,a) + fza_int
         f(:,b) = f(:,b) - fza_int
     end do
@@ -36,7 +36,7 @@ do a = 1, N-1
         distance  = norm2(rij)
         if (distance .le. 2.5) then
             eng_int = eng_int + 4*(-1/distance**6 + 1/distance**12) - vc
-            fza_int(:) = -4*(6*rij(:)/distance**8-12*rij(:)/distance**14)
+            fza_int(:) = 4*(6*rij(:)/distance**8-12*rij(:)/distance**14)
             f(:,a) = f(:,a) + fza_int
             f(:,b) = f(:,b) - fza_int
         end if

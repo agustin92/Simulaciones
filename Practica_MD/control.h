@@ -2,8 +2,8 @@
 
 
 
-/* Uso el potencial de L-J infinito */
-#define pot_inf 
+/* Uso el potencial de L-J infinito define undef */
+#undef pot_inf 
 
 /* Uso el potencial de L-J cortado */
-#undef pot_corte
+#define pot_corte

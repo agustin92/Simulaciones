@@ -4,7 +4,7 @@ program simple
     implicit none
     logical :: es, inp
     integer :: seed,i ,j,k
-    integer(kind=8) :: a, b, c
+    integer(kind=8) :: a, b, c, mc
 !    real(kind=8) :: fza_interaction
 
 ![NO TOCAR] Inicializa generador de número random
@@ -14,7 +14,6 @@ program simple
         open(unit=10,file='seed.dat',status='old')
         read(10,*) seed
         close(10)
-        print *,"  * Leyendo semilla de archivo seed.dat"
     else
         seed = 24583490
     end if
@@ -45,13 +44,17 @@ program simple
           r(1, a)  = L*uni()
           r(2, a)  = L*uni()
           r(3, a)  = L*uni()        
-          print *, "Posicion de particula", a, r(1, a), r(2, a), r(3, a)     
+        !  print *, "Posicion de particula", a, r(1, a), r(2, a), r(3, a)     
         end do
     end if   
     
-    print *, 'antes de calcular la fuerza', f
-    call fza_interaction()
-    print *, 'despues de calcular la fuerza', f
+    print *, 'tiempo,energia' 
+    do mc= 1, n_mc
+        r(:,:) = r(:,:) + 0.5*f(:,:)*dt**2
+        call positions()
+        call force()
+        print *, dt*mc,',' ,energy
+    end do
 
 ! Condiciones de contorno para "verlet position"        
 !!	do a = 1, N
