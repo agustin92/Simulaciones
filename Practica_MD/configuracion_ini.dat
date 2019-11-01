@@ -1,9 +1,9 @@
 ! Largo de caja 
-20
+10
 ! N número de partículas
 40
 ! N pasos de MC
 100000
 ! Paso temporal
-0.0001
+0.000001
 

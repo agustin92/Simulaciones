@@ -1,6 +1,6 @@
 module verlet_positions
 implicit none
-real, dimension(:,:), allocatable :: r, v, f
+real(kind=8), dimension(:,:), allocatable :: r, v, f
 real(kind=8) :: L, energy, dt
 integer(kind=8) :: N, n_mc
 contains

@@ -44,10 +44,21 @@ program simple
           r(1, a)  = L*uni()
           r(2, a)  = L*uni()
           r(3, a)  = L*uni()        
-        !  print *, "Posicion de particula", a, r(1, a), r(2, a), r(3, a)     
         end do
     end if   
     
+!    r(1,1) = 0.0
+!    r(2,1) = 0.0
+!    r(3,1) = 0.0
+
+!    r(1,2) = 9
+!    r(2,2) = 0.0
+!    r(3,2) = 0.0
+   
+!    call force()
+!    print *, 'Fuerza ' , f
+!    print *, 'Energia' , energy
+
     print *, 'tiempo,energia' 
     do mc= 1, n_mc
         r(:,:) = r(:,:) + 0.5*f(:,:)*dt**2
@@ -56,17 +67,6 @@ program simple
         print *, dt*mc,',' ,energy
     end do
 
-! Condiciones de contorno para "verlet position"        
-!!	do a = 1, N
-!!	r(i, a)  = integrate()
-!! 	do i = 1,3
-!!	if (r(i, a) > L)
-!!	   r(i, a) = r(i,a) - L
-!!	if (r(i,a) < 0)
-!!	   r(i,a) = r(i, a) + L
-!!	end do
-!!	end do
-!!
 
 
 !! FIN FIN edicion
