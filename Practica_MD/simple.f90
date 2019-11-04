@@ -51,7 +51,7 @@ program simple
 !    r(2,1) = 0.0
 !    r(3,1) = 0.0
 
-!    r(1,2) = 9
+!    r(1,2) = 1.05
 !    r(2,2) = 0.0
 !    r(3,2) = 0.0
    
@@ -59,6 +59,7 @@ program simple
 !    print *, 'Fuerza ' , f
 !    print *, 'Energia' , energy
 
+#ifdef initialize
     print *, 'tiempo,energia' 
     do mc= 1, n_mc
         r(:,:) = r(:,:) + 0.5*f(:,:)*dt**2
@@ -66,8 +67,19 @@ program simple
         call force()
         print *, dt*mc,',' ,energy
     end do
+#endif
 
-
+#ifdef vel_verlet
+    print *, 'tiempo,energia' 
+    do mc= 1, n_mc
+        r(:,:) = r(:,:) + v(:,:)*dt +0.5*f(:,:)*dt**2
+        v(:,:) = v(:,:) + 0.5*f(:,:)*dt
+        call positions()
+        call force()
+        v(:,:) = v(:,:)+ 0.5*f(:,:)*dt
+        print *, dt*mc,',' ,energy
+    end do
+#endif
 
 !! FIN FIN edicion
 !! 

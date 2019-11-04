@@ -7,3 +7,9 @@
 
 /* Uso el potencial de L-J cortado */
 #define pot_corte
+
+/* Rutina de inicializacion del sistema para evitar solapamiento de particulas */
+#define initialize
+
+/* Velocitiy verlet */
+#undef vel_verlet 

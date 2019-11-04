@@ -1,8 +1,9 @@
 subroutine force()
 use verlet_positions
+use ziggurat
 #include "control.h"
 implicit none
-real, dimension(3) :: rij, fza_int
+real(kind=8), dimension(3) :: rij, fza_int
 real(kind=8):: distance, eng_int, vc
 integer:: a, b, c
 
@@ -10,6 +11,8 @@ distance = 0
 rij = 0
 eng_int = 0
 fza_int = 0
+f = 0
+energy = 0
 
 #ifdef pot_inf
 do a = 1, N-1
