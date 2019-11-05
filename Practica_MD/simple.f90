@@ -33,17 +33,29 @@ program simple
 
 !!Armo la configuración inicial de las posiciones  al azar si es que no existe el archivo input.dat
 
-    inquire(file='input.dat', exist=inp) !Si existe lo abro para asignar los valores de las posiciones, tiene que estar la informacion en columnas
+    inquire(file='input_pos.dat', exist=inp) !Si existe lo abro para asignar los valores de las posiciones, tiene que estar la informacion en columnas
     if (inp) then
-       open(unit = 20, file = 'input.dat', status = 'old')
+       open(unit = 20, file = 'input_pos.dat', status = 'old')
        read(20, *) r(3, N)
        close(20)
 
+   inquire(file='input_vel.dat', exist=inp_vel)
+   if (inp_vel) then
+      open(unit = 21, file = 'input_vel.dat', status = 'old')
+      read(21, *) v(3, N)
+      close(21)
+
     else ! Si no existe el archivo, genero unas posiciones aleatorias para las N posiciones
        do a = 1, N
-          r(1, a)  = L*uni()
-          r(2, a)  = L*uni()
-          r(3, a)  = L*uni()        
+	  r(:,a) = L*un()
+	  v(:,a) = T*(3*N-3)*rnor()
+        !!  r(1, a)  = L*uni()
+        !!  r(2, a)  = L*uni()
+        !!  r(3, a)  = L*uni()
+	!!  v(1, a)  = T*(3*N-3)*rnor()
+	!!  v(2, a)  = T*(3*N-3)*rnor()
+	!!  v(3, a)  = T*(3*N-3)*rnor()
+       
         end do
     end if   
     
