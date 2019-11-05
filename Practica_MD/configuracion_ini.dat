@@ -1,10 +1,10 @@
 ! Largo de caja 
 10
 ! N número de partículas
-200
+400
 ! N pasos de MC
-500000
+1000
 ! Paso temporal
-0.01
+0.00001
 ! Temperatura
 1.5
