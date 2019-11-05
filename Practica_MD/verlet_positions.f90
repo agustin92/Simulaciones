@@ -1,7 +1,7 @@
 module verlet_positions
 implicit none
 real(kind=8), dimension(:,:), allocatable :: r, v, f
-real(kind=8) :: L, energy, dt
+real(kind=8) :: L, energy, dt, T
 integer(kind=8) :: N, n_mc
 contains
 
@@ -15,6 +15,8 @@ subroutine lectura
     read(20,*) n_mc
     read(20,*)
     read(20,*) dt
+    read(20,*)
+    read(20,*) T
     close(20)
     
     allocate (r(3, N))
