@@ -12,4 +12,7 @@
 #define initialize
 
 /* Velocitiy verlet */
-#undef vel_verlet 
+#undef vel_verlet
+
+/* Grabar la secuencia de posiciones para vmd */
+#define movie 

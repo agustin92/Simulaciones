@@ -1,12 +1,11 @@
 program simple 
-    use ziggurat
-    use verlet_positions
+use ziggurat
+use verlet_positions
 #include "control.h"
-    implicit none
-    logical :: es, inp, inp_vel
-    integer :: seed,i ,j,k
-    integer(kind=8) :: a, b, c, mc
-!    real(kind=8) :: fza_interaction
+implicit none
+logical :: es, inp, inp_vel
+integer :: seed,i ,j,k
+integer(kind=8) :: a, b, c, mc
 
 ![NO TOCAR] Inicializa generador de número random
 
@@ -22,40 +21,38 @@ program simple
     call zigset(seed)
 ![FIN NO TOCAR]    
 
-!! 
-!! EDITAR AQUI 
-!!
-
-      call lectura
-      r = 0
-      v = 0
-      f = 0
+! Llamo a la rutina de lectura de las condiciones iniciales y tamano de vectores
+    call lectura
+    r = 0
+    v = 0
+    f = 0
 
 !!Armo la configuración inicial de las posiciones  al azar si es que no existe el archivo input.dat
 
     inquire(file='input_pos.dat', exist=inp)
-    inquire(file='input_vel.dat', exist=inp_vel) !Si existe lo abro para asignar los valores de las posiciones, tiene que estar la informacion en columnas
+    inquire(file='input_vel.dat', exist=inp_vel) 
+!Si existe lo abro para asignar los valores de las posiciones, tiene que estar la informacion en columnas
     if (inp .and. inp_vel) then
        
-       open(unit = 20, file = 'input_pos.dat', status = 'old')
-       open(unit = 21, file = 'input_vel.dat', status = 'old')
-       do j = 1, N
-	   read(20, *) r(:, j)
-           read(21, *) v(:, N)
-       end do
-       close(20)
-       close(21)
+        open(unit = 20, file = 'input_pos.dat', status = 'old')
+        open(unit = 21, file = 'input_vel.dat', status = 'old')
+        do j = 1, N
+            read(20, *) r(:, j)
+            read(21, *) v(:, N)
+        end do
+        close(20)
+        close(21)
 
     else ! Si no existe el archivo, genero unas posiciones aleatorias para las N posiciones
-       print *, 'Creo inputs aleatorios'
-       do a = 1, N
-           r(1, a)  = L*uni()
-           r(2, a)  = L*uni()
-           r(3, a)  = L*uni()
-	   v(1, a)  = SQRT(T)*rnor()
-	   v(2, a)  = SQRT(T)*rnor()
-	   v(3, a)  = SQRT(T)*rnor()
-       
+        print *, 'Creo inputs aleatorios'
+        do a = 1, N
+            r(1, a)  = L*uni()
+            r(2, a)  = L*uni()
+            r(3, a)  = L*uni()
+            v(1, a)  = SQRT(T)*rnor()
+            v(2, a)  = SQRT(T)*rnor()
+            v(3, a)  = SQRT(T)*rnor()
+                   
         end do
     end if   
     
@@ -72,20 +69,26 @@ program simple
 !    print *, 'Energia' , energy
 
 #ifdef initialize
-    open(unit=20, file = 'input_pos.dat', status = 'unknown')
+    
+#ifdef movie
+    call movie_vtf(0)
+#endif
     print *, 'tiempo,energia' 
     do mc= 1, n_mc
         r(:,:) = r(:,:) + 0.5*f(:,:)*dt**2
         call positions()
         call force()
         print *, dt*mc,',' ,energy
-        if (mod(mc, 100) .eq. 0) then
-        	do i = 1, N
-		   write(20,*) r(:,i)
-		end do
+#ifdef movie
+        if (mod(mc, 1000) .eq. 0) then
+            call movie_vtf(1)
         end if
+#endif
     end do
-    close(20)
+
+#ifdef movie
+    call movie_vtf(2)
+#endif
 
 #endif
 
@@ -100,12 +103,12 @@ program simple
         call force()
         v(:,:) = v(:,:)+ 0.5*f(:,:)*dt
         print *, dt*mc,',' ,energy
-	if (mod(mc, 100) .eq. 0) then
-           do i = 1, N
-	      write(20, *) r(:, i)
-              write(21, *) v(:, i)
-	   end do
-        end if
+    if (mod(mc, 100) .eq. 0) then
+        do i = 1, N
+            write(20, *) r(:, i)
+            write(21, *) v(:, i)
+        end do
+    end if
     end do
     close(20)
     close(21)

@@ -3,7 +3,7 @@
 ! N número de partículas
 400
 ! N pasos de MC
-1000
+100000
 ! Paso temporal
 0.00001
 ! Temperatura
