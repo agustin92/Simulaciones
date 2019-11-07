@@ -12,7 +12,7 @@ rij = 0
 eng_int = 0
 fza_int = 0
 f = 0
-energy = 0
+energy_cin = 0
 
 #ifdef pot_inf
 do a = 1, N-1
@@ -47,7 +47,7 @@ do a = 1, N-1
 end do
 #endif
 
-energy = eng_int
+energy_pot = eng_int
 
 
 end subroutine

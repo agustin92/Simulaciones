@@ -5,7 +5,7 @@ fcomp = gfortran #ifort # /opt/intel/compiler70/ia32/bin/ifc
 # So: not use -O3 WITH -g option
 flags = -cpp -O3  
 # Remote compilation
-OBJS = ziggurat.o simple.o verlet_positions.o energy.o positions.o movie_vtf.o
+OBJS = ziggurat.o simple.o verlet_positions.o energy.o positions.o movie_vtf.o write_parameters.o energy_cin.o
 
 .SUFFIXES:            # this deletes the default suffixes 
 .SUFFIXES: .f90 .o    # this defines the extensions I want 
@@ -22,5 +22,5 @@ clean:
 	rm ./*.o ./*.mod	
 
 
-simple.o: simple.f90 ziggurat.o verlet_positions.o energy.o positions.o movie_vtf.o
+simple.o: simple.f90 ziggurat.o verlet_positions.o energy.o positions.o movie_vtf.o write_parameters.o energy_cin.o
 

@@ -69,47 +69,73 @@ integer(kind=8) :: a, b, c, mc
 !    print *, 'Energia' , energy
 
 #ifdef initialize
-    
+
+!Rutina para inicializar el sistema si se comienza con una configuracion inicial aleatoria para evitar solapamiento excesivo    
+
 #ifdef movie
     call movie_vtf(0)
 #endif
-    print *, 'tiempo,energia' 
+    call write_parameters(0,0) 
     do mc= 1, n_mc
         r(:,:) = r(:,:) + 0.5*f(:,:)*dt**2
         call positions()
         call force()
-        print *, dt*mc,',' ,energy
-#ifdef movie
         if (mod(mc, 1000) .eq. 0) then
+            call write_parameters(1,mc)
+#ifdef movie
             call movie_vtf(1)
-        end if
 #endif
+        end if
     end do
-
+    call write_parameters(2,0)
 #ifdef movie
     call movie_vtf(2)
 #endif
 
+!Guardo la configuracion final de posiciones y velocidades
+    open(unit=20, file = 'input_pos.dat', status = 'unknown')
+    open(unit=21, file = 'input_vel.dat', status = 'unknown')
+    do i = 1, N
+        write(20, *) r(:, i)
+        write(21, *) v(:, i)
+    end do
+    close(20)
+    close(21)
+
 #endif
 
 #ifdef vel_verlet
-    open(unit=20, file = 'input_pos.dat', status = 'unknown')
-    open(unit=21, file = 'input_vel.dat', status = 'unknown')
-    print *, 'tiempo,energia' 
+
+#ifdef movie
+    call movie_vtf(0)
+#endif
+    call write_parameters(0,0)
     do mc= 1, n_mc
         r(:,:) = r(:,:) + v(:,:)*dt +0.5*f(:,:)*dt**2
         v(:,:) = v(:,:) + 0.5*f(:,:)*dt
         call positions()
         call force()
         v(:,:) = v(:,:)+ 0.5*f(:,:)*dt
-        print *, dt*mc,',' ,energy
-    if (mod(mc, 100) .eq. 0) then
+        if (mod(mc, 1000) .eq. 0) then
+            call kinetic()
+            call write_parameters(1,mc)
+#ifdef movie
+            call movie_vtf(1)
+#endif
+        end if
+    end do
+    call write_parameters(2,0)
+#ifdef movie
+    call movie_vtf(2)
+#endif
+
+!Guardo la configuracion final de posiciones y velocidades
+    open(unit=20, file = 'input_pos.dat', status = 'unknown')
+    open(unit=21, file = 'input_vel.dat', status = 'unknown')
         do i = 1, N
             write(20, *) r(:, i)
             write(21, *) v(:, i)
         end do
-    end if
-    end do
     close(20)
     close(21)
 #endif

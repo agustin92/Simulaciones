@@ -1,7 +1,7 @@
 module verlet_positions
 implicit none
 real(kind=8), dimension(:,:), allocatable :: r, v, f
-real(kind=8) :: L, energy, dt, T
+real(kind=8) :: L, energy_pot, energy_cin, dt, T
 integer(kind=8) :: N, n_mc
 contains
 
@@ -22,7 +22,8 @@ subroutine lectura
     allocate (r(3, N))
     allocate (v(3, N))
     allocate (f(3, N))
-    energy = 0
+    energy_pot = 0
+    energy_cin = 0
 end subroutine
     
 end module verlet_positions
