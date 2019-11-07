@@ -4,7 +4,7 @@ use ziggurat
 #include "control.h"
 implicit none
 real(kind=8), dimension(3) :: rij, fza_int
-real(kind=8):: distance, eng_int, vc
+real(kind=8):: distance, eng_int, vc, presion_int
 integer:: a, b, c
 
 distance = 0
@@ -13,6 +13,8 @@ eng_int = 0
 fza_int = 0
 f = 0
 energy_cin = 0
+presion_int = 0
+presion = 0
 
 #ifdef pot_inf
 do a = 1, N-1
@@ -22,6 +24,7 @@ do a = 1, N-1
         distance  = norm2(rij)
         eng_int = eng_int + 4*(-1/distance**6 + 1/distance**12)
         fza_int(:) = 4*(6*rij(:)/distance**8-12*rij(:)/distance**14)
+        presion_int  = presion_int + 1/(3*L**3)*DOT_PRODUCT(fza_int(:),rij(:)) 
         f(:,a) = f(:,a) + fza_int
         f(:,b) = f(:,b) - fza_int
     end do
@@ -40,6 +43,7 @@ do a = 1, N-1
         if (distance .le. 2.5) then
             eng_int = eng_int + 4*(-1/distance**6 + 1/distance**12) - vc
             fza_int(:) = 4*(6*rij(:)/distance**8-12*rij(:)/distance**14)
+            presion_int  = presion_int + 1/(3*L**3)*DOT_PRODUCT(fza_int(:),rij(:)) 
             f(:,a) = f(:,a) + fza_int
             f(:,b) = f(:,b) - fza_int
         end if
@@ -48,7 +52,7 @@ end do
 #endif
 
 energy_pot = eng_int
-
+presion = N*T/L**3 + presion_int/((N**2-N)/2)  !!revisar normalizacion de presion_inti
 
 end subroutine
 

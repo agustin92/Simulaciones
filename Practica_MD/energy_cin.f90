@@ -9,5 +9,6 @@ do i = 1,N
 end do
 
 energy_cin = energy_aux
+temp_md = energy_aux*2/(3*N-3)
 
 end subroutine
