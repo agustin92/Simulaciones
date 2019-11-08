@@ -9,10 +9,10 @@
 #define pot_corte
 
 /* Rutina de inicializacion del sistema para evitar solapamiento de particulas */
-#define initialize
+#undef initialize
 
 /* Velocitiy verlet */
-#undef vel_verlet
+#define vel_verlet
 
 /* Grabar la secuencia de posiciones para vmd */
 #define movie 

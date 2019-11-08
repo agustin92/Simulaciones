@@ -12,7 +12,6 @@ rij = 0
 eng_int = 0
 fza_int = 0
 f = 0
-energy_cin = 0
 presion_int = 0
 presion = 0
 
@@ -52,7 +51,7 @@ end do
 #endif
 
 energy_pot = eng_int
-presion = N*T/L**3 + presion_int/((N**2-N)/2)  !!revisar normalizacion de presion_inti
+presion = N*temp_md/L**3 + presion_int/((N**2-N)/2)  !!revisar normalizacion de presion_inti
 
 end subroutine
 

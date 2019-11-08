@@ -110,6 +110,7 @@ integer(kind=8) :: a, b, c, mc
     call movie_vtf(0)
 #endif
     call write_parameters(0,0)
+    call kinetic()
     do mc= 1, n_mc
         r(:,:) = r(:,:) + v(:,:)*dt +0.5*f(:,:)*dt**2
         v(:,:) = v(:,:) + 0.5*f(:,:)*dt
