@@ -6,6 +6,7 @@ implicit none
 logical :: es, inp, inp_vel
 integer :: seed,i ,j,k
 integer(kind=8) :: a, b, c, mc
+real(kind=8) :: per
 
 ![NO TOCAR] Inicializa generador de número random
 
@@ -71,7 +72,7 @@ integer(kind=8) :: a, b, c, mc
 #ifdef initialize
 
 !Rutina para inicializar el sistema si se comienza con una configuracion inicial aleatoria para evitar solapamiento excesivo    
-
+per = 0.0
 #ifdef movie
     call movie_vtf(0)
 #endif
@@ -80,6 +81,10 @@ integer(kind=8) :: a, b, c, mc
         r(:,:) = r(:,:) + 0.5*f(:,:)*dt**2
         call positions()
         call force()
+        if (mod(mc,n_mc/10) .eq. 0) then
+                print *, 'Simulacion completada en: ', per,'%'
+                per = per + 10
+        end if
         if (mod(mc, 1000) .eq. 0) then
             call write_parameters(1,mc)
 #ifdef movie
@@ -105,7 +110,7 @@ integer(kind=8) :: a, b, c, mc
 #endif
 
 #ifdef vel_verlet
-
+per = 0.0
 #ifdef movie
     call movie_vtf(0)
 #endif
@@ -117,6 +122,10 @@ integer(kind=8) :: a, b, c, mc
         call positions()
         call force()
         v(:,:) = v(:,:)+ 0.5*f(:,:)*dt
+        if (mod(mc,n_mc/10) .eq. 0) then
+                print *, 'Simulacion completada en: ', per,'%'
+                per = per + 10
+        end if
         if (mod(mc, 1000) .eq. 0) then
             call kinetic()
             call write_parameters(1,mc)
