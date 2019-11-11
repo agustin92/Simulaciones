@@ -1,10 +1,12 @@
 ! Largo de caja 
 10
 ! N número de partículas
-400
+200
 ! N pasos de MC
-100000
+2000
 ! Paso temporal
 0.00001
 ! Temperatura
 1.5
+! Langevin gamma
+0.5

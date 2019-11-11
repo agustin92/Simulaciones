@@ -1,6 +1,4 @@
-/* variables de preprocessing */
-
-
+/*  variables de preprocessing */
 
 /* Uso el potencial de L-J infinito define undef */
 #undef pot_inf 
@@ -12,7 +10,10 @@
 #undef initialize
 
 /* Velocitiy verlet */
-#define vel_verlet
+#undef thermostat_NVE
 
 /* Grabar la secuencia de posiciones para vmd */
-#define movie 
+#undef movie 
+
+/* Termostato NVT - Langevin */
+#define thermostat_NVT

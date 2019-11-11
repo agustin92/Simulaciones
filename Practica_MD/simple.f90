@@ -1,7 +1,7 @@
 program simple 
 use ziggurat
 use verlet_positions
-#include "control.h"
+include "control.h"
 implicit none
 logical :: es, inp, inp_vel
 integer :: seed,i ,j,k
@@ -27,12 +27,13 @@ real(kind=8) :: per
     r = 0
     v = 0
     f = 0
+    force_langevin = 0
 
 !!Armo la configuración inicial de las posiciones  al azar si es que no existe el archivo input.dat
 
     inquire(file='input_pos.dat', exist=inp)
     inquire(file='input_vel.dat', exist=inp_vel) 
-!Si existe lo abro para asignar los valores de las posiciones, tiene que estar la informacion en columnas
+!Si existe lo abro par:a asignar los valores de las posiciones, tiene que estar la informacion en columnas
     if (inp .and. inp_vel) then
        
         open(unit = 20, file = 'input_pos.dat', status = 'old')
@@ -109,7 +110,7 @@ per = 0.0
 
 #endif
 
-#ifdef vel_verlet
+#ifdef thermostat_NVE
 per = 0.0
 #ifdef movie
     call movie_vtf(0)
@@ -142,6 +143,52 @@ per = 0.0
 !Guardo la configuracion final de posiciones y velocidades
     open(unit=20, file = 'input_pos.dat', status = 'unknown')
     open(unit=21, file = 'input_vel.dat', status = 'unknown')
+    do i = 1, N
+        write(20, *) r(:, i)
+        write(21, *) v(:, i)
+    end do
+    close(20)
+    close(21)
+
+#endif
+
+
+
+#ifdef thermostat_NVT
+per = 0.0
+#ifdef movie
+    call movie_vtf(0)
+#endif
+    call write_parameters(0,0)
+    call kinetic()
+    do mc= 1, n_mc
+        r(:,:) = r(:,:) + v(:,:)*dt +0.5*f(:,:)*dt**2
+        v(:,:) = v(:,:) + 0.5*f(:,:)*dt
+        call positions()
+        call force()
+        force_langevin(:,:) = -langevin_gamma*v(:,:) + SQRT(2*T*langevin_gamma/(mc*dt))*rnor()
+        f(:, :) = f(:, :) + force_langevin(:, :)
+        v(:,:) = v(:,:)+ 0.5*f(:,:)*dt
+        if (mod(mc,n_mc/10) .eq. 0) then
+                print *, 'Simulacion completada en: ', per,'%'
+                per = per + 10
+        end if
+        if (mod(mc, 1000) .eq. 0) then
+            call kinetic()
+            call write_parameters(1,mc)
+#ifdef movie
+            call movie_vtf(1)
+#endif
+        end if
+    end do
+    call write_parameters(2,0)
+#ifdef movie
+    call movie_vtf(2)
+#endif
+
+!Guardo la configuracion final de posiciones y velocidades
+    open(unit=20, file = 'input_pos.dat', status = 'unknown')
+    open(unit=21, file = 'input_vel.dat', status = 'unknown')
         do i = 1, N
             write(20, *) r(:, i)
             write(21, *) v(:, i)
@@ -149,6 +196,7 @@ per = 0.0
     close(20)
     close(21)
 #endif
+ 
 
 !! FIN FIN edicion
 !! 
