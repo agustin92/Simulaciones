@@ -1,7 +1,7 @@
 program simple 
 use ziggurat
 use verlet_positions
-include "control.h"
+#include "control.h"
 implicit none
 logical :: es, inp, inp_vel
 integer :: seed,i ,j,k
@@ -166,7 +166,7 @@ per = 0.0
         v(:,:) = v(:,:) + 0.5*f(:,:)*dt
         call positions()
         call force()
-        force_langevin(:,:) = -langevin_gamma*v(:,:) + SQRT(2*T*langevin_gamma/(mc*dt))*rnor()
+        force_langevin(:,:) = -langevin_gamma*v(:,:) + SQRT(2*T*langevin_gamma/(dt))*rnor()
         f(:, :) = f(:, :) + force_langevin(:, :)
         v(:,:) = v(:,:)+ 0.5*f(:,:)*dt
         if (mod(mc,n_mc/10) .eq. 0) then
