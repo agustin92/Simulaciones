@@ -28,18 +28,6 @@ do a = 1, N-1
         f(:,a) = f(:,a) + fza_int
         f(:,b) = f(:,b) - fza_int
 
-        #ifdef thermostat_NVT
-
-        force_langevin(1,a) = -langevin_gamma*v(1,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        force_langevin(2,a) = -langevin_gamma*v(2,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        force_langevin(3,a) = -langevin_gamma*v(3,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        force_langevin(1,b) = -langevin_gamma*v(1,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        force_langevin(2,b) = -langevin_gamma*v(2,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        force_langevin(3,b) = -langevin_gamma*v(3,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        f(:,a) = f(:,a) + force_langevin(:,a)
-        f(:,b) = f(:,b) + force_langevin(:,b)
-        
-	#endif
 
     end do
 end do
@@ -65,21 +53,22 @@ do a = 1, N-1
        
         endif
 
-        #ifdef thermostat_NVT
-
+    end do
+#ifdef thermostat_NVT
         force_langevin(1,a) = -langevin_gamma*v(1,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
         force_langevin(2,a) = -langevin_gamma*v(2,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
         force_langevin(3,a) = -langevin_gamma*v(3,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        force_langevin(1,b) = -langevin_gamma*v(1,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        force_langevin(2,b) = -langevin_gamma*v(2,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-        force_langevin(3,b) = -langevin_gamma*v(3,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
         f(:,a) = f(:,a) + force_langevin(:,a)
-        f(:,b) = f(:,b) + force_langevin(:,b)
-
-        #endif
-
-    end do
+#endif
 end do
+    
+#ifdef thermostat_NVT
+    force_langevin(1,N) = -langevin_gamma*v(1,N) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+    force_langevin(2,N) = -langevin_gamma*v(2,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+    force_langevin(3,N) = -langevin_gamma*v(3,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+    f(:,N) = f(:,N) + force_langevin(:,a)
+#endif
+
 #endif
 
 energy_pot = eng_int

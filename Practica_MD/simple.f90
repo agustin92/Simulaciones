@@ -5,8 +5,8 @@ use verlet_positions
 implicit none
 logical :: es, inp, inp_vel
 integer :: seed,i ,j,k
-integer(kind=8) :: a, b, c, mc
-real(kind=8) :: per
+integer(kind=8) :: a, b, c, mc, n_iteracion
+real(kind=8) :: per, presion_mean, presion2_mean
 
 ![NO TOCAR] Inicializa generador de número random
 
@@ -27,7 +27,7 @@ real(kind=8) :: per
     r = 0
     v = 0
     f = 0
-
+    n_iteracion = 0
 !!Armo la configuración inicial de las posiciones  al azar si es que no existe el archivo input.dat
 
     inquire(file='input_pos.dat', exist=inp)
@@ -87,6 +87,10 @@ per = 0.0
         end if
         if (mod(mc, 1000) .eq. 0) then
             call write_parameters(1,mc)
+            presion_ac = presion_ac + presion
+            presion2_ac = presion2_ac + presion**2
+            temp_ac = temp_ac + temp_md
+            n_iteracion = n_iteracion + 1 
 #ifdef movie
             call movie_vtf(1)
 #endif
@@ -129,6 +133,10 @@ per = 0.0
         if (mod(mc, 1000) .eq. 0) then
             call kinetic()
             call write_parameters(1,mc)
+            presion_ac = presion_ac + presion
+            presion2_ac = presion2_ac + presion**2
+            temp_ac = temp_ac +temp_md
+            n_iteracion = n_iteracion + 1
 #ifdef movie
             call movie_vtf(1)
 #endif
@@ -148,7 +156,14 @@ per = 0.0
     end do
     close(20)
     close(21)
+    open(unit=22, file = 'mean_measurment.dat', status = 'unknown')
 
+
+    presion_mean = presion_ac/n_iteracion
+    presion2_mean = presion2_ac/n_iteracion   
+    write(22,*) 'Presion_mean,Presion2_mean,var,temp_mean'
+    write(22,*) presion_mean,',',presion2_mean,',',sqrt(presion2_mean-(presion_mean)**2),',',temp_ac/n_iteracion
+    close(22)
 #endif
 
 
