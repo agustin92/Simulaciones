@@ -12,6 +12,7 @@ rij = 0
 eng_int = 0
 fza_int = 0
 f = 0
+force_langevin = 0
 presion_int = 0
 presion = 0
 
@@ -26,8 +27,23 @@ do a = 1, N-1
         presion_int  = presion_int + 1/(3*L**3)*DOT_PRODUCT(fza_int(:),rij(:)) 
         f(:,a) = f(:,a) + fza_int
         f(:,b) = f(:,b) - fza_int
+
+        #ifdef thermostat_NVT
+
+        force_langevin(1,a) = -langevin_gamma*v(1,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(2,a) = -langevin_gamma*v(2,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(3,a) = -langevin_gamma*v(3,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(1,b) = -langevin_gamma*v(1,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(2,b) = -langevin_gamma*v(2,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(3,b) = -langevin_gamma*v(3,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        f(:,a) = f(:,a) + force_langevin(:,a)
+        f(:,b) = f(:,b) + force_langevin(:,b)
+        
+	#endif
+
     end do
 end do
+
 #endif
 
 #ifdef pot_corte
@@ -39,13 +55,29 @@ do a = 1, N-1
         rij(:) = r(:, b) - r(:, a)
         rij(:) = rij(:) - L*int(2*rij(:)/L)
         distance  = norm2(rij)
+        
         if (distance .le. 2.5) then
             eng_int = eng_int + 4*(-1/distance**6 + 1/distance**12) - vc
             fza_int(:) = 4*(6*rij(:)/distance**8-12*rij(:)/distance**14)
             presion_int  = presion_int + 1/(3*L**3)*DOT_PRODUCT(fza_int(:),rij(:)) 
             f(:,a) = f(:,a) + fza_int
             f(:,b) = f(:,b) - fza_int
-        end if
+       
+        endif
+
+        #ifdef thermostat_NVT
+
+        force_langevin(1,a) = -langevin_gamma*v(1,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(2,a) = -langevin_gamma*v(2,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(3,a) = -langevin_gamma*v(3,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(1,b) = -langevin_gamma*v(1,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(2,b) = -langevin_gamma*v(2,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        force_langevin(3,b) = -langevin_gamma*v(3,b) + SQRT(2*T*langevin_gamma/(dt))*rnor()
+        f(:,a) = f(:,a) + force_langevin(:,a)
+        f(:,b) = f(:,b) + force_langevin(:,b)
+
+        #endif
+
     end do
 end do
 #endif
@@ -54,4 +86,3 @@ energy_pot = eng_int
 presion = N*temp_md/L**3 + presion_int/((N**2-N)/2)  !!revisar normalizacion de presion_inti
 
 end subroutine
-

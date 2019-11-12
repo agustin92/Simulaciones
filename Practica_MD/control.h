@@ -10,7 +10,7 @@
 #undef initialize
 
 /* Velocitiy verlet */
-#undef thermostat_NVE
+#define velocity_verlet
 
 /* Grabar la secuencia de posiciones para vmd */
 #undef movie 
