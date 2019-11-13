@@ -66,7 +66,7 @@ end do
     force_langevin(1,N) = -langevin_gamma*v(1,N) + SQRT(2*T*langevin_gamma/(dt))*rnor()
     force_langevin(2,N) = -langevin_gamma*v(2,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
     force_langevin(3,N) = -langevin_gamma*v(3,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
-    f(:,N) = f(:,N) + force_langevin(:,a)
+    f(:,N) = f(:,N) + force_langevin(:,N)
 #endif
 
 #endif
