@@ -39,7 +39,7 @@ real(kind=8) :: per, presion_mean, presion2_mean
         open(unit = 21, file = 'input_vel.dat', status = 'old')
         do j = 1, N
             read(20, *) r(:, j)
-            read(21, *) v(:, N)
+            read(21, *) v(:, j)
         end do
         close(20)
         close(21)
@@ -156,12 +156,12 @@ per = 0.0
     end do
     close(20)
     close(21)
-    open(unit=22, file = 'mean_measurment.dat', status = 'unknown')
+    open(unit=22, file = 'mean_measurement.dat', status = 'unknown')
 
 
     presion_mean = presion_ac/n_iteracion
     presion2_mean = presion2_ac/n_iteracion   
-    write(22,*) 'densidad,temperatura_in,presion_mean,presion2_mean,var,temp_mean,'
+    write(22,*) 'densidad,temperatura_in,presion_mean,presion2_mean,var,temp_mean'
     write(22,*) N/L**3,T,presion_mean,',',presion2_mean,',',sqrt(presion2_mean-(presion_mean)**2),',',temp_ac/n_iteracion
     close(22)
 #endif
