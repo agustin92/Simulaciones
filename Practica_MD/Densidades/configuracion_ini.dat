@@ -1,0 +1,12 @@
+! Largo de la caja 
+27.144176165949062
+! N numero de particulas 
+200
+! Numero de pasos de MD 
+500000
+! Paso temporal
+0.000001
+! Temperatura 
+1.1
+! Langevin gamma
+0.5
