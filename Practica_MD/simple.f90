@@ -72,7 +72,7 @@ real(kind=8) :: per, presion_mean, presion2_mean
 #ifdef initialize
 
 !Rutina para inicializar el sistema si se comienza con una configuracion inicial aleatoria para evitar solapamiento excesivo    
-per = 0.0
+per = 10.0
 #ifdef movie
     call movie_vtf(0)
 #endif
@@ -114,7 +114,7 @@ per = 0.0
 #endif
 
 #ifdef velocity_verlet
-per = 0.0
+per = 10.0
 #ifdef movie
     call movie_vtf(0)
 #endif
