@@ -162,7 +162,7 @@ per = 0.0
     presion_mean = presion_ac/n_iteracion
     presion2_mean = presion2_ac/n_iteracion   
     write(22,*) 'densidad,temperatura_in,presion_mean,presion2_mean,var,temp_mean'
-    write(22,*) N/L**3,T,presion_mean,',',presion2_mean,',',sqrt(presion2_mean-(presion_mean)**2),',',temp_ac/n_iteracion
+    write(22,*) N/L**3,',',T,',',presion_mean,',',presion2_mean,',',sqrt(presion2_mean-(presion_mean)**2),',',temp_ac/n_iteracion
     close(22)
 #endif
 
