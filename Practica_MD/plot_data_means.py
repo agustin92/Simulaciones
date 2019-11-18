@@ -1,76 +1,102 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
-def compact_RUN(folder):
-
-	list_of_files = os.listdir(folder)
-
-	L = len(list_of_files)
-
-	for files in list_of_files:
-		if.files.startwith("RUN"):
+import re
 			
 
-def open_data(folder):
+def open_data_step1(folder):
 
-	list_of_files = os.listdir(folder)
+	list_of_folder = os.listdir(folder)
+	list_of_folder.sort()
 
-#	for files in os.listdir(parent_folder):
-#		if files.startswith("Densidades"):
-#			list_of_files.append(files) 
+  list_of_folder = [f for f in list_of_folder if not (re.search('.DAT',f))]
 
-	#list_of_files.sort()
+	L = len(list_of_folder)
+	print('Carpetas:', list_of_folder)
 
-	L = len(list_of_files) 
+	for i in range(L):
+		sub_folder = os.path.join(folder, list_of_folder[i])
+		open_data_RUNS(sub_folder)
+  
+  print('Creado los valores medios de los RUNs para todas las carpetas')
 
-	print('Cantidad de Densidades', L)
+	return
 
-	#Temperatura, Energy_med,Energy2_med,var_energy,Cv,Magnetization_med,Magnetization2_med,var_magnetization, X,N_tot,N_fav
 
+def open_data_RUNS(folder):
+
+	list_of_folder = os.listdir(folder)
+	list_of_folder.sort()
+	list_of_folder = [f for f in list_of_folder if re.search('RUN',f)]
+
+	L = len(list_of_folder) 
+	print('Cantidad de RUNS', L)
+
+	#densidad,temperatura_in,presion_mean,presion2_mean,var,temp_mean
+
+	densidad = np.zeros(L)
+	temperature_in = np.zeros(L)
+	presion = np.zeros(L)
+	presion2 = np.zeros(L)
+	presion_var = np.zeros(L)
 	temperature = np.zeros(L)
-	energy = np.zeros(L)
-	err_energy = np.zeros(L)
-	var_energy = np.zeros(L)
-	cv = np.zeros(L)
-	magnetization = np.zeros(L)
-	err_magnetization = np.zeros(L)
-	var_magnetization = np.zeros(L)
-	x = np.zeros(L)
-	Neff = np.zeros(L)
 
 	for i in range(L):
 
-		#a = list_of_files[i].split('_')[1]
-		#b = a.split('.')[0]
-		#c = b.replace(",", ".")
-		#temperature[i] = c
-
-		name = os.path.join(folder, list_of_files[i])
+		name = os.path.join(folder, list_of_folder[i], 'mean_measurment.csv')
 		data = np.genfromtxt(name, delimiter=',')
 
-		temperature[i] = data[1,0]
+    densidad[i] = data[1,0]
+		temperature_in[i] = data[1,1]
+		presion[i] = data[1,2]
+		presion2[i] = data[1,3]
+		presion_var[i] = data[1,4]
+		temperature[i] = data[1,5]
 
-		energy[i] = np.mean(data[1:,1])
-		err_energy[i] = np.std(data[1:,1])
+	mean_data = np.array([np.mean(densidad), np.mean(temperature_in), np.mean(presion), np.mean(presion2), np.mean(presion_var), np.mean(temperature)]).T
+	name = os.path.join(folder, 'all_mean_measurment.csv')
+	header_text = '#densidad, temperatura_in, presion, presion2, presion_var, temperatura'
+	np.savetxt(name, mean_data, header=header_text)
 
-		var_energy[i] = np.mean(np.array(data[1:,3]))
-		cv[i] = np.mean(np.array(data[1:,4])*np.array(data[1:,3]))
+	print('Creado los valores medios de los RUNs para la carpeta.')
 
-		magnetization[i] = -1*np.mean(data[1:,5])/1600
-		err_magnetization[i] = np.std(data[1:,5])/1600
+	return
 
-		var_magnetization[i] = np.mean(np.array(data[1:,7]))
-		x[i] = np.mean(np.array(data[1:,8])*np.array(data[1:,7])/1600)
+def open_data_step2(folder, save_folder):
 
-		Neff[i] = np.mean(data[1:,10])/np.mean(data[1:,9])
+	list_of_folder = os.listdir(folder)
+	list_of_folder.sort()
 
-	data = np.array([temperature, energy, err_energy, var_energy, cv, magnetization, err_magnetization, var_magnetization, x, Neff]).T
-	name = os.path.join(save_folder, 'all_data_mean.csv')
-	header_text = 'Temperature, Energy, Err Energy, Var Energy, Cv, Magnetization, Err Magnetization, Var Magnetization, X, Neff'
+	L = len(list_of_folder) 
+	#print('Cantidad de carpetas', L)
+
+	densidad = np.zeros(L)
+	temperature_in = np.zeros(L)
+	presion = np.zeros(L)
+	presion2 = np.zeros(L)
+	presion_var = np.zeros(L)
+	temperature = np.zeros(L)
+
+	for i in range(L):
+
+		name = os.path.join(folder, list_of_folder[i], 'all_mean_measurment.csv')
+		data = np.genfromtxt(name, delimiter='')
+
+		densidad[i] = data[1,0]
+		temperature_in[i] = data[1,1]
+		presion[i] = data[1,2]
+		presion2[i] = data[1,3]
+		presion_var[i] = data[1,4]
+		temperature[i] = data[1,5]
+
+	data = np.array([densidad, temperature_in, presion, presion2, presion_var, temperature]).T
+	name = os.path.join(save_folder, 'all_mean.csv')
+	header_text = '#densidad, temperatura_in, presion, presion2, presion_var, temperatura'
 	np.savetxt(name, data, header=header_text)
 
-	return data
+	print('Juntados todos los valores medios')
+
+	return
 
 def manage_save_directory(path, new_folder_name):
     # Small function to create a new folder if not exist.
@@ -81,95 +107,65 @@ def manage_save_directory(path, new_folder_name):
 
 def plot_data(save_folder, data):
 
-	name = os.path.join(save_folder, 'all_data_mean.csv')
+	name = os.path.join(save_folder, 'all_mean.csv')
 	data = np.genfromtxt(name, delimiter='')
 
-	temperature = data[0:,0]
-	energy = data[0:,1]
-	err_energy = data[0:,2]
-	var_energy = data[0:,3]
-	cv  = data[0:,4]
-	magnetization  = data[0:,5]
-	err_magnetization = data[0:,6]
-	var_magnetization  = data[0:,7]
-	x  = data[0:,8]
-	Neff  = data[0:,9]
+	densidad = data[0:,0]
+	temperatura_in = data[0:,1]
+	presion = data[0:,2]
+	presion2 = data[0:,3]
+	presion_var = data[0:,4]
+	temperatura = data[0:,5]
 
-	print('Grafico energía')
+	print('Grafico presion vs densidad')
 	plt.figure()
-	plt.errorbar(temperature, energy, yerr = err_energy,linestyle = 'none', marker = 'o')
-	plt.xlabel('Temperatura')
-	plt.ylabel('Energía')
-	figure_name = os.path.join(save_folder, 'energy_vs_temperature.png')
+	plt.plot(densidad, presion, 'o')
+	plt.xlabel('Densidad')
+	plt.ylabel('Presión interna')
+	figure_name = os.path.join(save_folder, 'presion_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
 
-	print('Grafico fluctuación energía')
+	print('Grafico varianza presion vs densidad')
 	plt.figure()
-	plt.plot(temperature, var_energy, 'o')
-	plt.xlabel('Temperatura')
-	plt.ylabel('Fluctuación Energía')
-	figure_name = os.path.join(save_folder, 'var_energy_vs_temperature.png')
+	plt.plot(densidad, var_presion, 'o')
+	plt.xlabel('Densidad')
+	plt.ylabel('Varianza Presión interna')
+	figure_name = os.path.join(save_folder, 'var_presion_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
 
-	print('Grafico Cv')
+	print('Grafico temperatura vs densidad')
 	plt.figure()
-	plt.plot(temperature, cv, 'o')
-	plt.xlabel('Temperatura')
-	plt.ylabel('Cv')
-	figure_name = os.path.join(save_folder, 'cv_vs_temperature.png')
+	plt.plot(densidad, temperatura, 'o', label = 'Temperatura simulación')
+	plt.plot(densidad, temperatura_in, 'r--', label = 'Temperatura impuesta')
+	plt.xlabel('Densidad')
+	plt.ylabel('Temperatura')
+	plt.legend(loc = 'upper rigth')
+	figure_name = os.path.join(save_folder, 'temperatura_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
 
-	print('Grafico Magnetización')
-	plt.figure()
-	plt.errorbar(temperature, magnetization, yerr = err_magnetization,linestyle = 'none',marker = 'o')
-	plt.xlabel('Temperatura')
-	plt.ylabel('Magnetización')
-	figure_name = os.path.join(save_folder, 'M_vs_temperature.png')
-	plt.savefig(figure_name, dpi = 400)
-	plt.close()
-
-	print('Grafico fluctuación Magnetización')
-	plt.figure()
-	plt.plot(temperature, var_magnetization, 'o')
-	plt.xlabel('Temperatura')
-	plt.ylabel('Fluctuación Magnetización')
-	figure_name = os.path.join(save_folder, 'var_M_vs_temperature.png')
-	plt.savefig(figure_name, dpi = 400)
-	plt.close()
-
-	print('Grafico X susceptibilidad magnetica')
-	plt.figure()
-	plt.plot(temperature, x, 'o')
-	plt.xlabel('Temperatura')
-	plt.ylabel('X susceptibilidad magnética')
-	figure_name = os.path.join(save_folder, 'x_vs_temperature.png')
-	plt.savefig(figure_name, dpi = 400)
-	plt.close()
-
-	print('Grafico Neff')
-	plt.figure()
-	plt.plot(temperature, Neff, 'o')
-	plt.xlabel('Temperatura')
-	plt.ylabel('N aceptados/N total')
-	figure_name = os.path.join(save_folder, 'Neff_temperature.png')
-	plt.savefig(figure_name, dpi = 400)
-	plt.close()
 	return
 
 
 if __name__ == '__main__':
 
 	#poner la dirección Densidad"
-	#parent_folder = 'C:/Users/Alumno/Dropbox/Simulaciones-master/Practica_MD/Densidades'
+	parent_folder = 'C:/Users/Alumno/Dropbox/Simulaciones-master/Practica_MD/Densidades'
 	parent_folder = os.path.normpath(parent_folder)
-	print('carpeta', parent_folder)
-	#recorre cada carpeta de Densidades y  guarda los means de los RUN en csv
-        save_folder = manage_save_directory(parent_folder, 'figures_means_density')
+	print('directorio:', parent_folder)
+	
+  save_folder = manage_save_directory(parent_folder, 'figuras_densidad')
+  
+  #recorre cada carpeta de Densidades y hace los means de los RUN, lo guarda como csv en cada carpeta de Densidad
+  open_data_step1(parent_folder)
 
-	data = open_data(parent_folder, save_folder)
-     
-	#crea una carpeta figuras_temperaturas donde guarda los graficos vs temperatura:
-	plot_data(save_folder)
+  #recorre cada carpeta de Densidades y usa el archivo generado en step1, crea un csv con todos means
+  open_data_step2(parent_folder, save_folder)
+
+  #grafica en funcion de la densidad
+  plot_data(save_folder)
+
+
+
