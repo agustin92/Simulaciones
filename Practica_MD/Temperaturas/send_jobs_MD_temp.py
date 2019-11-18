@@ -9,7 +9,7 @@ Created on Wed Nov 13 14:08:48 2019
 import subprocess
 
 #Poner el directorio donde se aloja el programa send jobs
-path_directory = '/home/agustin/Documents/Materia2/Practica_MD/Temperaturas'
+path_directory = '/home/agustin/Documents/Materia/Practica_MD/Temperaturas'
 densidad = 0.300
 f = open('lista_temperaturas.dat','r')
 for renglon in f:
@@ -42,7 +42,7 @@ for renglon in f:
             process8 = subprocess.run('rm movie.vtf',shell=True)
             print('Finalizacion de simulacion {} de MD para temperatura {}'.format(i+1,temp))
         else:
-            print('Inicio simulacion {} de MD para densidad {}'.format(i+1,temp))
+            print('Inicio simulacion {} de MD para temperatura {}'.format(i+1,temp))
             process1 = subprocess.run('mkdir '+ path_directory+'/{}/RUN_{}'.format(temp,i+1), shell =True)
             process2 = subprocess.run('../simple', shell=True)
             if i == 10:
@@ -52,5 +52,5 @@ for renglon in f:
                 process3b = subprocess.run('rm movie.vtf',shell=True)
             process4 = subprocess.run('cp configuracion_ini.dat '+path_directory+'/{}/RUN_{}'.format(temp,i+1),shell=True)
             process5 = subprocess.run('cp input_pos.dat input_vel.dat '+path_directory+'/{}/RUN_{}'.format(temp,i+1),shell=True)
-            print('Finalizacion de simulacion {} de MD para densidad {}'.format(i+1,temp))                
+            print('Finalizacion de simulacion {} de MD para temperatura {}'.format(i+1,temp))                
 f.close()        
