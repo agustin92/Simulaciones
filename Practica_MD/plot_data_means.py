@@ -9,16 +9,18 @@ def open_data_step1(folder):
 	list_of_folder = os.listdir(folder)
 	list_of_folder.sort()
 
-  list_of_folder = [f for f in list_of_folder if not (re.search('.DAT',f))]
+	list_of_folder = [f for f in list_of_folder if not (re.search('figuras',f))]
 
 	L = len(list_of_folder)
 	print('Carpetas:', list_of_folder)
 
 	for i in range(L):
 		sub_folder = os.path.join(folder, list_of_folder[i])
+		print('Densidad:', list_of_folder[i])
 		open_data_RUNS(sub_folder)
-  
-  print('Creado los valores medios de los RUNs para todas las carpetas')
+		
+
+	print('Creado los valores medios de los RUNs para todas las carpetas')
 
 	return
 
@@ -27,7 +29,7 @@ def open_data_RUNS(folder):
 
 	list_of_folder = os.listdir(folder)
 	list_of_folder.sort()
-	list_of_folder = [f for f in list_of_folder if re.search('RUN',f)]
+	list_of_folder = [f for f in list_of_folder if re.search('RUN',f) if not re.search('RUN_1',f)]
 
 	L = len(list_of_folder) 
 	print('Cantidad de RUNS', L)
@@ -42,11 +44,12 @@ def open_data_RUNS(folder):
 	temperature = np.zeros(L)
 
 	for i in range(L):
+		print('Carpeta RUN:', list_of_folder[i])
 
-		name = os.path.join(folder, list_of_folder[i], 'mean_measurment.csv')
+		name = os.path.join(folder, list_of_folder[i], 'mean_measurement.dat')
 		data = np.genfromtxt(name, delimiter=',')
 
-    densidad[i] = data[1,0]
+		densidad[i] = data[1,0]
 		temperature_in[i] = data[1,1]
 		presion[i] = data[1,2]
 		presion2[i] = data[1,3]
@@ -54,7 +57,7 @@ def open_data_RUNS(folder):
 		temperature[i] = data[1,5]
 
 	mean_data = np.array([np.mean(densidad), np.mean(temperature_in), np.mean(presion), np.mean(presion2), np.mean(presion_var), np.mean(temperature)]).T
-	name = os.path.join(folder, 'all_mean_measurment.csv')
+	name = os.path.join(folder, 'all_mean_measurement.csv')
 	header_text = '#densidad, temperatura_in, presion, presion2, presion_var, temperatura'
 	np.savetxt(name, mean_data, header=header_text)
 
@@ -67,6 +70,7 @@ def open_data_step2(folder, save_folder):
 	list_of_folder = os.listdir(folder)
 	list_of_folder.sort()
 
+	list_of_folder = [f for f in list_of_folder if not (re.search('figuras',f))]
 	L = len(list_of_folder) 
 	#print('Cantidad de carpetas', L)
 
@@ -79,15 +83,17 @@ def open_data_step2(folder, save_folder):
 
 	for i in range(L):
 
-		name = os.path.join(folder, list_of_folder[i], 'all_mean_measurment.csv')
+		name = os.path.join(folder, list_of_folder[i], 'all_mean_measurement.csv')
 		data = np.genfromtxt(name, delimiter='')
 
-		densidad[i] = data[1,0]
-		temperature_in[i] = data[1,1]
-		presion[i] = data[1,2]
-		presion2[i] = data[1,3]
-		presion_var[i] = data[1,4]
-		temperature[i] = data[1,5]
+		print(data)
+
+		densidad[i] = data[0]
+		temperature_in[i] = data[1]
+		presion[i] = data[2]
+		presion2[i] = data[3]
+		presion_var[i] = data[4]
+		temperature[i] = data[5]
 
 	data = np.array([densidad, temperature_in, presion, presion2, presion_var, temperature]).T
 	name = os.path.join(save_folder, 'all_mean.csv')
@@ -105,7 +111,7 @@ def manage_save_directory(path, new_folder_name):
         os.makedirs(new_folder_path)
     return new_folder_path
 
-def plot_data(save_folder, data):
+def plot_data(save_folder):
 
 	name = os.path.join(save_folder, 'all_mean.csv')
 	data = np.genfromtxt(name, delimiter='')
@@ -121,23 +127,23 @@ def plot_data(save_folder, data):
 	plt.figure()
 	plt.plot(densidad, presion, 'o')
 	plt.xlabel('Densidad')
-	plt.ylabel('Presión interna')
+	plt.ylabel('Presion interna')
 	figure_name = os.path.join(save_folder, 'presion_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
 
 	print('Grafico varianza presion vs densidad')
 	plt.figure()
-	plt.plot(densidad, var_presion, 'o')
+	plt.plot(densidad, presion_var, 'o')
 	plt.xlabel('Densidad')
-	plt.ylabel('Varianza Presión interna')
+	plt.ylabel('Varianza Presion interna')
 	figure_name = os.path.join(save_folder, 'var_presion_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
 
 	print('Grafico temperatura vs densidad')
 	plt.figure()
-	plt.plot(densidad, temperatura, 'o', label = 'Temperatura simulación')
+	plt.plot(densidad, temperatura, 'o', label = 'Temperatura MD')
 	plt.plot(densidad, temperatura_in, 'r--', label = 'Temperatura impuesta')
 	plt.xlabel('Densidad')
 	plt.ylabel('Temperatura')
@@ -151,21 +157,24 @@ def plot_data(save_folder, data):
 
 if __name__ == '__main__':
 
-	#poner la dirección Densidad"
-	parent_folder = 'C:/Users/Alumno/Dropbox/Simulaciones-master/Practica_MD/Densidades'
+	#poner la direccion Densidad"
+	#parent_folder = 'C:/Users/Alumno/Dropbox/Simulaciones-master/Practica_MD/Densidades'
+	parent_folder = '/home/alumnoit/Desktop/Simulaciones-master/Practica_MD/Densidades/Densidades_agus_completo'
 	parent_folder = os.path.normpath(parent_folder)
 	print('directorio:', parent_folder)
 	
-  save_folder = manage_save_directory(parent_folder, 'figuras_densidad')
-  
-  #recorre cada carpeta de Densidades y hace los means de los RUN, lo guarda como csv en cada carpeta de Densidad
-  open_data_step1(parent_folder)
+	save_folder = manage_save_directory(parent_folder, 'figuras_densidad')
 
-  #recorre cada carpeta de Densidades y usa el archivo generado en step1, crea un csv con todos means
-  open_data_step2(parent_folder, save_folder)
+	#recorre cada carpeta de Densidades y hace los means de los RUN, lo guarda como csv en cada carpeta de Densidad
+	open_data_step1(parent_folder)
 
-  #grafica en funcion de la densidad
-  plot_data(save_folder)
+#recorre cada carpeta de Densidades y usa el archivo generado en step1, crea un csv con todos means
+
+	open_data_step2(parent_folder, save_folder)
+
+#grafica en funcion de la densidad
+
+	plot_data(save_folder)
 
 
 
