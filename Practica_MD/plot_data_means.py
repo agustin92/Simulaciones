@@ -44,7 +44,7 @@ def open_data_RUNS(folder):
 	temperature = np.zeros(L)
 	energia_pot = np.zeros(L)
 	energia_cin = np.zeros(L)
-        energia_mec = np.zeros(L)
+	energia_mec = np.zeros(L)
 
 	for i in range(L):
 		print('Carpeta RUN:', list_of_folder[i])
@@ -60,15 +60,17 @@ def open_data_RUNS(folder):
 		temperature[i] = data[1,5]
 
 		name_energy = os.path.join(folder, list_of_folder[i], 'variables_fisicas.dat')
-		data_energy = np.genfromtxt(name_energy, delimeter = ',')
+		data_energy = np.genfromtxt(name_energy, delimiter = ',')
 
-                energia_pot[i] = np.mean(data[1,:])
-                energia_cin[i] = np.mean(data[2,:])
-                energia_mec[i] = np.mean(data[3,:])
+		energia_pot[i] = np.mean(data_energy[1:,1])
+		energia_cin[i] = np.mean(data_energy[1:,2])
+		energia_mec[i] = np.mean(data_energy[1:,3])
 
-	mean_data = np.array([np.mean(densidad), np.mean(temperature_in), np.mean(presion), np.mean(presion2), np.mean(presion_var), np.mean(temperature), np.mean(energia_pot), np.mean(energia_cin), np.mean(energia_mec)]).T
+		#print('energia', data_energy[1:,:])
+
+	mean_data = np.array([np.mean(densidad), np.mean(temperature_in), np.mean(presion), np.mean(presion2), np.mean(presion_var), np.mean(temperature), np.mean(energia_pot), np.mean(energia_cin), np.mean(energia_mec), np.std(presion), np.std(temperature), np.std(energia_pot), np.std(energia_cin), np.std(energia_mec)]).T
 	name = os.path.join(folder, 'all_mean_measurement.csv')
-	header_text = '#densidad, temperatura_in, presion, presion2, presion_var, temperatura, energia pot, energia cin, energia mec'
+	header_text = '#densidad, temperatura_in, presion, presion2, presion_var, temperatura, energia pot, energia cin, energia mec, error presion, error temperatura, error energia cin, error energia pot, error energia mec'
 	np.savetxt(name, mean_data, header=header_text)
 
 	print('Creado los valores medios de los RUNs para la carpeta.')
@@ -90,9 +92,15 @@ def open_data_step2(folder, save_folder):
 	presion2 = np.zeros(L)
 	presion_var = np.zeros(L)
 	temperature = np.zeros(L)
-        energia_pot = np.zeros(L)
-        energia_cin = np.zeros(L)
-        energia_mec = np.zeros(L)
+	energia_pot = np.zeros(L)
+	energia_cin = np.zeros(L)
+	energia_mec = np.zeros(L)
+
+	err_presion = np.zeros(L)
+	err_temperature = np.zeros(L)
+	err_energia_pot = np.zeros(L)
+	err_energia_cin = np.zeros(L)
+	err_energia_mec = np.zeros(L)
 
 	for i in range(L):
 
@@ -107,12 +115,19 @@ def open_data_step2(folder, save_folder):
 		presion2[i] = data[3]
 		presion_var[i] = data[4]
 		temperature[i] = data[5]
-                energia_pot[i] = data[6]
-                energia_cin[i] = data[7]
-                energia_mec[i] = data[8]
-	data = np.array([densidad, temperature_in, presion, presion2, presion_var, temperature, energia_pot, energia_cin, energia_mec]).T
+		energia_pot[i] = data[6]
+		energia_cin[i] = data[7]
+		energia_mec[i] = data[8]
+
+		err_presion[i] = data[9]
+		err_temperature[i] = data[10]
+		err_energia_pot[i] = data[11]
+		err_energia_cin[i] = data[12]
+		err_energia_mec[i] = data[13]
+	
+	data = np.array([densidad, temperature_in, presion, presion2, presion_var, temperature, energia_pot, energia_cin, energia_mec, err_presion, err_temperature, err_energia_pot, err_energia_cin, err_energia_mec]).T
 	name = os.path.join(save_folder, 'all_mean.csv')
-	header_text = '#densidad, temperatura_in, presion, presion2, presion_var, temperatura. energia pot, energia cin, energia mec'
+	header_text = '#densidad, temperatura_in, presion, presion2, presion_var, temperatura. energia pot, energia cin, energia mec, error presion, error temperatura, error energia pot, error energia cin, error energia mec'
 	np.savetxt(name, data, header=header_text)
 
 	print('Juntados todos los valores medios')
@@ -137,47 +152,53 @@ def plot_data(save_folder):
 	presion2 = data[0:,3]
 	presion_var = data[0:,4]
 	temperatura = data[0:,5]
-        energia_pot = data[0:,6]
-        energia_cin = data[0:,7]
-        energia_mec = data[0:,8]
+	energia_pot = data[0:,6]
+	energia_cin = data[0:,7]
+	energia_mec = data[0:,8]
+
+	err_presion = data[0:,9]
+	err_temperatura = data[0:,10]
+	err_energia_pot = data[0:,11]
+	err_energia_cin = data[0:,12]
+	err_energia_mec = data[0:,13]
 
 	print('Grafico presion vs densidad')
 	plt.figure()
-	plt.plot(densidad, presion, 'o')
+	plt.errorbar(densidad, presion, yerr = err_presion, marker = 'o', linestyle = '--')
 	plt.xlabel('Densidad')
-	plt.ylabel('Presion interna')
+	plt.ylabel('Presión interna')
 	figure_name = os.path.join(save_folder, 'presion_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
 
 	print('Grafico varianza presion vs densidad')
 	plt.figure()
-	plt.plot(densidad, presion_var, 'o')
+	plt.plot(densidad, presion_var, 'o--')
 	plt.xlabel('Densidad')
-	plt.ylabel('Varianza Presion interna')
+	plt.ylabel('Varianza Presión interna')
 	figure_name = os.path.join(save_folder, 'var_presion_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
 
 	print('Grafico temperatura vs densidad')
 	plt.figure()
-	plt.plot(densidad, temperatura, 'o', label = 'Temperatura MD')
+	plt.errorbar(densidad, temperatura, yerr = err_temperatura, marker = 'o', linestyle = '--', label = 'Temperatura')
 	plt.plot(densidad, temperatura_in, 'r--', label = 'Temperatura impuesta')
 	plt.xlabel('Densidad')
 	plt.ylabel('Temperatura')
-	plt.legend(loc = 'upper rigth')
+	plt.legend()
 	figure_name = os.path.join(save_folder, 'temperatura_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
 
 	print('Grafico energias vs densidad')
 	plt.figure()
-	plt.plot(densidad, energia_pot, 'o', label = 'Energia potencial')
-	plt.plot(densidad, energia_cin, 'o--', label = 'Energia cinética')
-        plt.plot(densidad, energia_mec, '*', label = 'Energia mecanica')
+	plt.errorbar(densidad, energia_pot, yerr = err_energia_pot, marker = 'o',  linestyle = '--', label = 'Energía potencial')
+	plt.errorbar(densidad, energia_cin, yerr = err_energia_cin, marker = 'o',  linestyle = '--',  label = 'Energía cinética')
+	plt.errorbar(densidad, energia_mec, yerr = err_energia_mec, marker = 'o',  linestyle = '--', label = 'Energía mecánica')
 	plt.xlabel('Densidad')
 	plt.ylabel('Energia')
-	plt.legend(loc = 'upper rigth')
+	plt.legend()
 	figure_name = os.path.join(save_folder, 'energia_vs_densidad.png')
 	plt.savefig(figure_name, dpi = 400)
 	plt.close()
@@ -189,7 +210,8 @@ if __name__ == '__main__':
 	#poner la direccion Densidad"
 	#parent_folder = 'C:/Users/Alumno/Dropbox/Simulaciones-master/Practica_MD/Densidades'
 	#parent_folder = '/home/alumnoit/Desktop/Simulaciones-master/Practica_MD/Densidades/Densidades_agus_completo'
-	parent_folder = 'home/alumno/Escritorio/Densidades/Densidades_agus_completo'
+	#parent_folder = 'home/alumno/Escritorio/Densidades/Densidades_agus_completo'
+	parent_folder = 'D:/Mis Cosas/Mis documentos/compu/Facultad/Materias posgrado/Sims2019/Densidades/Densidades_agus_completo'
 
 	print('directorio:', parent_folder)
 	
