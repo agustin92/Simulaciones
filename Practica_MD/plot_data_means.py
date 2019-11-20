@@ -141,7 +141,7 @@ def manage_save_directory(path, new_folder_name):
         os.makedirs(new_folder_path)
     return new_folder_path
 
-def plot_data(save_folder):
+def plot_data_densidad(save_folder):
 
 	name = os.path.join(save_folder, 'all_mean.csv')
 	data = np.genfromtxt(name, delimiter='')
@@ -205,28 +205,95 @@ def plot_data(save_folder):
 
 	return
 
+def plot_data_temperatura(save_folder):
+
+	name = os.path.join(save_folder, 'all_mean.csv')
+	data = np.genfromtxt(name, delimiter='')
+
+	densidad = data[0:,0]
+	temperatura_in = data[0:,1]
+	presion = data[0:,2]
+	presion2 = data[0:,3]
+	presion_var = data[0:,4]
+	temperatura = data[0:,5]
+	energia_pot = data[0:,6]
+	energia_cin = data[0:,7]
+	energia_mec = data[0:,8]
+
+	err_presion = data[0:,9]
+	err_temperatura = data[0:,10]
+	err_energia_pot = data[0:,11]
+	err_energia_cin = data[0:,12]
+	err_energia_mec = data[0:,13]
+
+	print('Grafico presion vs temperatura')
+	plt.figure()
+	plt.errorbar(temperatura, presion, yerr = err_presion, marker = 'o', linestyle = '--')
+	plt.xlabel('Temperatura')
+	plt.ylabel('Presión interna')
+	figure_name = os.path.join(save_folder, 'presion_vs_temperatura.png')
+	plt.savefig(figure_name, dpi = 400)
+	plt.close()
+
+	print('Grafico varianza presion vs temperatura')
+	plt.figure()
+	plt.plot(temperatura, presion_var, 'o--')
+	plt.xlabel('Temperatura')
+	plt.ylabel('Varianza Presión interna')
+	figure_name = os.path.join(save_folder, 'var_presion_vs_temperatura.png')
+	plt.savefig(figure_name, dpi = 400)
+	plt.close()
+
+	print('Grafico energias vs temperatura')
+	plt.figure()
+	plt.errorbar(temperatura, energia_pot, yerr = err_energia_pot, marker = 'o',  linestyle = '--', label = 'Energía potencial')
+	plt.errorbar(temperatura, energia_cin, yerr = err_energia_cin, marker = 'o',  linestyle = '--',  label = 'Energía cinética')
+	plt.errorbar(temperatura, energia_mec, yerr = err_energia_mec, marker = 'o',  linestyle = '--', label = 'Energía mecánica')
+	plt.xlabel('Temperatura')
+	plt.ylabel('Energia')
+	plt.legend()
+	figure_name = os.path.join(save_folder, 'energia_vs_temperatura.png')
+	plt.savefig(figure_name, dpi = 400)
+	plt.close()
+    
+	print('Grafico temperatura')
+	plt.figure()
+	plt.figure()
+	plt.errorbar(temperatura_in, temperatura, yerr = err_temperatura, marker = 'o',  linestyle = '--')
+	plt.xlabel('Temperatura impuesta')
+	plt.ylabel('Temperatura')
+	plt.legend()
+	figure_name = os.path.join(save_folder, 'temperatura_vs_temperatura_in.png')
+	plt.savefig(figure_name, dpi = 400)
+	plt.close()
+
+
+	return
+
+
 if __name__ == '__main__':
 
 	#poner la direccion Densidad"
-	#parent_folder = 'C:/Users/Alumno/Dropbox/Simulaciones-master/Practica_MD/Densidades'
-	#parent_folder = '/home/alumnoit/Desktop/Simulaciones-master/Practica_MD/Densidades/Densidades_agus_completo'
-	#parent_folder = 'home/alumno/Escritorio/Densidades/Densidades_agus_completo'
-	parent_folder = 'D:/Mis Cosas/Mis documentos/compu/Facultad/Materias posgrado/Sims2019/Densidades/Densidades_agus_completo'
-
-	print('directorio:', parent_folder)
-	
-	save_folder = manage_save_directory(parent_folder, 'figuras_densidad')
+    #parent_folder = '/home/luciana/Desktop/Densidades/Densidades_completo'
+    parent_folder = '/home/luciana/Desktop/Temperaturas/Temperaturas_agus'
+    print('directorio:', parent_folder)
+    
+    figuras = 'figuras_temperatura'# 'figuras_densidad'
+    save_folder = manage_save_directory(parent_folder, figuras)
 
 	#recorre cada carpeta de Densidades y hace los means de los RUN, lo guarda como csv en cada carpeta de Densidad
-	open_data_step1(parent_folder)
+    open_data_step1(parent_folder)
 
 #recorre cada carpeta de Densidades y usa el archivo generado en step1, crea un csv con todos means
 
-	open_data_step2(parent_folder, save_folder)
+    open_data_step2(parent_folder, save_folder)
 
 #grafica en funcion de la densidad
-
-	plot_data(save_folder)
+    
+    if figuras == 'figuras_densidad':
+        plot_data_densidad(save_folder)
+    elif figuras == 'figuras_temperatura':
+        plot_data_temperatura(save_folder)
 
 
 
