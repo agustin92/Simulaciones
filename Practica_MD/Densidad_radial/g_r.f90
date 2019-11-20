@@ -10,12 +10,11 @@ read(20,*)
 call inicio
 
 call gr_c(0)
-do i = 1,2
+do i = 1,1000
     read(20,*)
     read(20,*)
     do j= 1,200
         read(20,*) r(:,j)
-        print *, r(:,j)
     end do
     call gr_c(1)   
 

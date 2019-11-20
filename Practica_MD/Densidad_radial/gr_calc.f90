@@ -33,7 +33,7 @@ case(2)
     do k = 1, nhist
         dist = delg*(k+0.5)
         vb = ((k+1)**3-k**3)*delg**3
-        nid = 4/3*Pi*vb*0.3
+        nid = 4/3*Pi*vb*dens
         g(k) = g(k)/(ngr*200*nid)
     end do
 
