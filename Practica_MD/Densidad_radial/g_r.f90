@@ -26,7 +26,7 @@ close(20)
 open(unit=21, file='salida_gr.dat', status='unknown')
 write(21,*) 'r,g(r)'
 do k= 1,nhist
-    dist = delg*(k+0.5)
+    dist = delg*(k-0.5)
     write(21,*) dist,',',g(k)
 end do
 close(21)

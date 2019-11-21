@@ -10,7 +10,7 @@ case(0)
     write(45,*) 'Tiempo,Energia_pot,Energia_cin,Energia,Presion,Temperatura_md'
 case(1)
     energy_tot = energy_cin + energy_pot
-    write(45,*) dt*npaso,',',energy_pot,',',energy_cin,',',energy_tot,',',presion,',',temp_md
+    write(45,*) dt*npaso,',',energy_pot,',',energy_cin,',',energy_tot,',',N*temp_md/L**3 + 1/(3.000*L**3)*presion,',',temp_md
 case(2)
     close(45)
 end select

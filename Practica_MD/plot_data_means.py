@@ -212,13 +212,14 @@ def plot_data_temperatura(save_folder):
 
 	densidad = data[0:,0]
 	temperatura_in = data[0:,1]
-	presion = data[0:,2]
+	
 	presion2 = data[0:,3]
 	presion_var = data[0:,4]
 	temperatura = data[0:,5]
 	energia_pot = data[0:,6]
 	energia_cin = data[0:,7]
 	energia_mec = data[0:,8]
+	presion = data[0:,2]#-densidad*temperatura
 
 	err_presion = data[0:,9]
 	err_temperatura = data[0:,10]
@@ -228,6 +229,7 @@ def plot_data_temperatura(save_folder):
 
 	print('Grafico presion vs temperatura')
 	plt.figure()
+	#plt.plot(temperatura, presion, marker = 'o', linestyle = '--')
 	plt.errorbar(temperatura, presion, yerr = err_presion, marker = 'o', linestyle = '--')
 	plt.xlabel('Temperatura')
 	plt.ylabel('Presión interna')
@@ -275,7 +277,7 @@ if __name__ == '__main__':
 
 	#poner la direccion Densidad"
     #parent_folder = '/home/luciana/Desktop/Densidades/Densidades_completo'
-    parent_folder = '/home/luciana/Desktop/Temperaturas/Temperaturas_agus'
+    parent_folder = '/home/agustin/Documents/Materia2/Practica_MD/Temperaturas/Temperaturas_agus'
     print('directorio:', parent_folder)
     
     figuras = 'figuras_temperatura'# 'figuras_densidad'
