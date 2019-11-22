@@ -134,7 +134,7 @@ per = 10.0
             call kinetic()
             call write_parameters(1,mc)
             presion_ac = presion_ac + presion
-            presion2_ac = presion2_ac + (N*temp_md/L**3 + 1/(3.000*L**3)*presion)**2
+            presion2_ac = presion2_ac + (N*temp_md/L**3 + 1.00/(3.000*L**3)*presion)**2
             temp_ac = temp_ac +temp_md
             n_iteracion = n_iteracion + 1
 #ifdef movie
