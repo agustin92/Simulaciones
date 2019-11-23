@@ -14,6 +14,7 @@ fza_int = 0
 f = 0
 force_langevin = 0
 presion = 0
+presion_int = 0
 
 #ifdef pot_inf
 do a = 1, N-1
