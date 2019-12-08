@@ -1,0 +1,18 @@
+! Largo de caja, si es esfera es el radio
+10
+! N número de partículas
+200
+! N pasos de MC
+10000
+! Paso temporal
+0.00001
+! Temperatura de caja
+0.3
+! Langevin gamma
+0.5
+! Radio de NP
+1
+! Temperatura NP
+4.0
+! Thermal Skin
+0.1
