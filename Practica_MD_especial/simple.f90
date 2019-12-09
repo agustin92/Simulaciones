@@ -46,7 +46,7 @@ real(kind=8) , parameter :: pi = 3.1415927
         close(20)
         close(21)
 
-#ifdef initialize_box
+#ifdef mode_box
     else ! Si no existe el archivo, genero unas posiciones aleatorias para las N posiciones
         print *, 'Creo inpus aleatorios...'
         print *, '..para caja cuadrada de largo L'
@@ -60,7 +60,7 @@ real(kind=8) , parameter :: pi = 3.1415927
         end do
 #endif
 
-!!#ifdef intialize_spherical
+!!#ifdef mode_spherical
     else 
        print*, 'Creo inputs aleatorios...'
        print *, '...para caja esférica de radio L, con NP en el centro de radio R_NP'
@@ -155,7 +155,9 @@ per = 10.0
     do mc= 1, n_mc
         r(:,:) = r(:,:) + v(:,:)*dt +0.5*f(:,:)*dt**2
         v(:,:) = v(:,:) + 0.5*f(:,:)*dt
+#ifdef thermostat_NVT
         call positions()
+#endif       
         call force()
         v(:,:) = v(:,:)+ 0.5*f(:,:)*dt
         if (mod(mc,n_mc/10) .eq. 0) then

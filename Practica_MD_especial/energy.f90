@@ -52,7 +52,6 @@ do a = 1, N-1
             f(:,b) = f(:,b) - fza_int
        
         endif
-
     end do
 #ifdef thermostat_NVT
         force_langevin(1,a) = -langevin_gamma*v(1,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
@@ -60,6 +59,11 @@ do a = 1, N-1
         force_langevin(3,a) = -langevin_gamma*v(3,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
         f(:,a) = f(:,a) + force_langevin(:,a)
 #endif
+
+#ifdef thermal_wall_spherical
+        call thermal_wall_spheres(a)
+#endif
+
 end do
     
 #ifdef thermostat_NVT
@@ -67,6 +71,10 @@ end do
     force_langevin(2,N) = -langevin_gamma*v(2,N) + SQRT(2*T*langevin_gamma/(dt))*rnor()
     force_langevin(3,N) = -langevin_gamma*v(3,N) + SQRT(2*T*langevin_gamma/(dt))*rnor()
     f(:,N) = f(:,N) + force_langevin(:,N)
+#endif
+
+#ifdef thermal_wall_spherical
+    call thermal_wall_spheres(N)
 #endif
 
 #endif

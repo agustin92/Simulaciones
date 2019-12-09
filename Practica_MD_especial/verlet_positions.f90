@@ -21,7 +21,7 @@ subroutine lectura
     read(20,*) T
     read(20,*)
     read(20,*) langevin_gamma
-#ifdef thermal_wall_spherical
+#ifdef mode_spherical
     print *, 'Leyendo parametros para configuracion esférica con NP'
     read(20,*)
     read(20,*) R_NP

@@ -1,4 +1,4 @@
-GFORTRAN module version '6' created from ziggurat.f90 on Sun Dec  8 20:47:02 2019
+GFORTRAN module version '6' created from ziggurat.f90 on Mon Dec  9 00:19:35 2019
 MD5:9b742a2f5fe1cb69e59084188e287a96 -- If you edit this, you'll get what you deserve.
 
 (() () () () () () () () () () () () () () () () () () () () () () () ()

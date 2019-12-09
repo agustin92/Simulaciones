@@ -6,23 +6,23 @@
 /* Uso el potencial de L-J cortado */
 #define pot_corte
 
-/* Configuracion inicial para caja cuadrada */
-#undef intialize_box
+/* Configuracion inicial y condiciones de contorno para caja cuadrada */
+#undef mode_box
 
 /* Rutina de inicializacion del sistema para evitar solapamiento de particulas */
 #undef initialize
 
 /* Velocitiy verlet */
-#undef velocity_verlet
+#define velocity_verlet
 
 /* Grabar la secuencia de posiciones para vmd */
-#undef movie 
+#define movie 
 
 /* Termostato NVT - Langevin */
-#undef thermostat_NV
+#undef thermostat_NVT
 
 /* Configuracion inicial para caja esférica, con NP en el centro */
-#define initialize_spherical
+#define mode_spherical
 
 /* Pared térmica esferas */
 #define thermal_wall_spherical
