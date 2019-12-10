@@ -4,7 +4,7 @@ use verlet_positions
 #include "control.h"
 implicit none
 logical :: es, inp, inp_vel
-integer :: seed,i ,j,k
+integer :: seed,i ,j,k,ither
 integer(kind=8) :: a, b, c, mc, n_iteracion
 real(kind=8) :: per, presion_mean, presion2_mean
 real(kind=8) :: l_aux, ratio, colatitud, azimutal, v_colatitud, v_azimutal
@@ -60,7 +60,7 @@ real(kind=8) , parameter :: pi = 3.1415927
         end do
 #endif
 
-!!#ifdef mode_spherical
+#ifdef mode_spherical
     else 
        print*, 'Creo inputs aleatorios...'
        print *, '...para caja esférica de radio L, con NP en el centro de radio R_NP'
@@ -78,14 +78,12 @@ real(kind=8) , parameter :: pi = 3.1415927
 
           print *, 'Esta dentro de la caja y fuera de la NP?', L, R_NP, norm2(r(:,a))
 
-          v_colatitud = uni()*pi
-          v_azimutal = uni()*2*pi
-          v(1,a) = SQRT(T)*rnor()*SIN(v_colatitud)*COS(v_azimutal)
-          v(2,a) = SQRT(T)*rnor()*SIN(v_colatitud)*SIN(v_azimutal)
-          v(3,a) = SQRT(T)*rnor()*COS(v_colatitud)
+          v(1,a) = SQRT(T)*rnor()          
+          v(2,a) = SQRT(T)*rnor()
+          v(3,a) = SQRT(T)*rnor()
 
        end do
-!!#endif   
+#endif   
 
    end if
     
@@ -154,12 +152,15 @@ per = 10.0
     call kinetic()
     do mc= 1, n_mc
         r(:,:) = r(:,:) + v(:,:)*dt +0.5*f(:,:)*dt**2
-        v(:,:) = v(:,:) + 0.5*f(:,:)*dt
-#ifdef thermostat_NVT
-        call positions()
-#endif       
+        v(:,:) = v(:,:) + 0.5*f(:,:)*dt     
         call force()
         v(:,:) = v(:,:)+ 0.5*f(:,:)*dt
+
+#ifdef thermal_wall_spherical
+        do ither= 1, N
+            call thermal_wall_spheres(ither)
+        end do
+#endif
         if (mod(mc,n_mc/10) .eq. 0) then
                 print *, 'Simulacion completada en: ', per,'%'
                 per = per + 10

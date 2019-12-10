@@ -22,5 +22,5 @@ clean:
 	rm ./*.o ./*.mod	
 
 
-simple.o: simple.f90 ziggurat.o verlet_positions.o energy.o positions.o movie_vtf.o write_parameters.o energy_cin.o thermal_wall_sphere.f90
+simple.o: simple.f90 ziggurat.o verlet_positions.o energy.o positions.o movie_vtf.o write_parameters.o energy_cin.o thermal_wall_sphere.o
 

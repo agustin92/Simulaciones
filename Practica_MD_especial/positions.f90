@@ -2,8 +2,8 @@ subroutine positions()
 use verlet_positions
 #include "control.h"
 implicit none
-integer:: i
-
+integer(kind=8):: i
+real(kind=8) :: r_perp(3)
 #ifdef mode_box
 ! Mueve las posiciones de las particulas para garantizar ccp
     do i = 1, N
@@ -31,10 +31,12 @@ integer:: i
 #ifdef mode_spherical
    do i = 1, N
        if (norm2(r(:,i)) .lt. R_NP) then
-          r(:, i) = r(:, i) + R_NP
+          r_perp(:) =  -r(:,i)/SQRT(dot_product( r(:,i),r(:,i) ) )
+          r(:,i) = R_NP*r_perp(:)
        end if
        if (norm2(r(:,i)) .gt. L) then
-          r(:,i) = r(:, i) - L + R_NP
+          r_perp(:) =  -r(:,i)/SQRT(dot_product( r(:,i),r(:,i) ) )
+          r(:,i) = r_perp(:)*L
        end if
    end do
 #endif

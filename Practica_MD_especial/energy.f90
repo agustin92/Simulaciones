@@ -41,7 +41,7 @@ vc = 4*(-1/2.5**6 + 1/2.5**12)
 do a = 1, N-1
     do b = a+1, N
         rij(:) = r(:, b) - r(:, a)
-        rij(:) = rij(:) - L*int(2*rij(:)/L)
+!        rij(:) = rij(:) - L*int(2*rij(:)/L)
         distance  = norm2(rij)
         
         if (distance .le. 2.5) then
@@ -60,9 +60,9 @@ do a = 1, N-1
         f(:,a) = f(:,a) + force_langevin(:,a)
 #endif
 
-#ifdef thermal_wall_spherical
-        call thermal_wall_spheres(a)
-#endif
+!#ifdef thermal_wall_spherical
+!        call thermal_wall_spheres(a)
+!#endif
 
 end do
     
@@ -73,9 +73,9 @@ end do
     f(:,N) = f(:,N) + force_langevin(:,N)
 #endif
 
-#ifdef thermal_wall_spherical
-    call thermal_wall_spheres(N)
-#endif
+!#ifdef thermal_wall_spherical
+!    call thermal_wall_spheres(N)
+!#endif
 
 #endif
 
