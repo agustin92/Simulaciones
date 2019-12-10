@@ -52,7 +52,14 @@ do a = 1, N-1
             f(:,b) = f(:,b) - fza_int
        
         endif
+        
+        f(:,a) = f(:,a) -4.0*epsilon_NP*sigma_NP**6*(6.0*r(:,a)/norm2(r(:,a))**8- &
+                12.0*r(:,a)*sigma_NP**2/norm2(r(:,a))**14)
+
     end do
+
+    f(:,N) = f(:,N) -4.0*epsilon_NP*sigma_NP**6*(6.0*r(:,N)/norm2(r(:,N))**8- &
+            12.0*r(:,N)*sigma_NP**2/norm2(r(:,N))**14)
 #ifdef thermostat_NVT
         force_langevin(1,a) = -langevin_gamma*v(1,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()
         force_langevin(2,a) = -langevin_gamma*v(2,a) + SQRT(2*T*langevin_gamma/(dt))*rnor()

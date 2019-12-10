@@ -3,7 +3,8 @@ module verlet_positions
 implicit none
 real(kind=8), dimension(:,:), allocatable :: r, v, f, force_langevin
 real(kind=8) :: L, energy_pot, energy_cin, presion, temp_md, dt, T, langevin_gamma, presion_ac,presion2_ac, temp_ac
-real(kind=8) :: R_NP, T_NP, thermal_skin
+real(kind=8) :: R_NP, T_NP, thermal_skin, sigma_NP, epsilon_NP, Temp_est(450), Temp_est_ac(450)
+real(kind=8) :: Dens_est(450), Dens_est_ac(450)
 integer(kind=8) :: N, n_mc
 contains
 
@@ -29,7 +30,10 @@ subroutine lectura
     read(20,*) T_NP
     read(20,*)
     read(20,*) thermal_skin
-    print *, R_NP, T_NP, thermal_skin
+    read(20,*)
+    read(20,*) sigma_NP
+    read(20,*)
+    read(20,*) epsilon_NP
 #endif
     close(20)
     
@@ -44,6 +48,10 @@ subroutine lectura
     presion_ac = 0
     presion2_ac = 0 
     temp_ac = 0
+    Temp_est = 0
+    Temp_est_ac = 0
+    Dens_est = 0
+    Dens_est_ac = 0
 end subroutine
     
 end module verlet_positions

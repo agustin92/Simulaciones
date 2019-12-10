@@ -4,9 +4,9 @@ use verlet_positions
 #include "control.h"
 implicit none
 logical :: es, inp, inp_vel
-integer :: seed,i ,j,k,ither
+integer :: seed,i ,j,k,ither, i_est
 integer(kind=8) :: a, b, c, mc, n_iteracion
-real(kind=8) :: per, presion_mean, presion2_mean
+real(kind=8) :: per, presion_mean, presion2_mean, dist
 real(kind=8) :: l_aux, ratio, colatitud, azimutal, v_colatitud, v_azimutal
 real(kind=8) , parameter :: pi = 3.1415927
 
@@ -171,6 +171,8 @@ per = 10.0
             presion_ac = presion_ac + presion
             presion2_ac = presion2_ac + (N*temp_md/L**3 + 1.00/(3.000*L**3)*presion)**2
             temp_ac = temp_ac +temp_md
+            Temp_est_ac(:) = Temp_est_ac(:) + Temp_est(:) 
+            Dens_est_ac(:) = Dens_est_ac(:) + Dens_est(:)
             n_iteracion = n_iteracion + 1
 #ifdef movie
             call movie_vtf(1)
@@ -199,6 +201,17 @@ per = 10.0
     write(22,*) 'densidad,temperatura_in,presion_mean,presion2_mean,var,temp_mean'
     write(22,*) N/L**3,',',T,',',presion_mean,',',presion2_mean,',',sqrt(presion2_mean-(presion_mean)**2),',',temp_ac/n_iteracion
     close(22)
+
+    open(unit=23, file = 'perfiles.dat', status = 'unknown')
+    write(23,*) 'Distacia_radial,Temperatura,Densidad'
+    do i_est = 1,450
+        dist = (L-R_NP)/450.0*(i_est-0.5)+R_NP
+        write(23,*) dist,',',Temp_est_ac(i_est)/n_iteracion,',',Dens_est_ac(i_est)/n_iteracion
+    end do
+    close(23)
+
+
+
 #endif
 
 

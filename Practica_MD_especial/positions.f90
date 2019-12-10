@@ -31,7 +31,7 @@ real(kind=8) :: r_perp(3)
 #ifdef mode_spherical
    do i = 1, N
        if (norm2(r(:,i)) .lt. R_NP) then
-          r_perp(:) =  -r(:,i)/SQRT(dot_product( r(:,i),r(:,i) ) )
+          r_perp(:) =  r(:,i)/SQRT(dot_product( r(:,i),r(:,i) ) )
           r(:,i) = R_NP*r_perp(:)
        end if
        if (norm2(r(:,i)) .gt. L) then
