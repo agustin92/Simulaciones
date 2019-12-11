@@ -5,7 +5,7 @@ use ziggurat
 implicit none
 integer, intent(in) :: i
 real (kind=8) :: r_perp(3),v_new(3),r_par1(3),r_par2(3),r_perp_NP(3),v_new_NP(3),r_par1_NP(3),r_par2_NP(3)
-real (kind=8) :: fac,fac_NP,v_par
+real (kind=8) :: fac,fac_NP,v_perp, v_perp_NP
 
 interface 
         function cross_product(r1,r2)
@@ -26,14 +26,14 @@ end interface
 ! ----- Spherical cavity
          
 !Sphera external ratio L, temperature T, thermal_skin
-        if (norm2(r(:, i)) > (L-thermal_skin)) then !.and. ((v(1, i) > 0.0) .or. (v(2,i) > 0.0) .or. (v(3, i) > 0.0)) then
+        if (norm2(r(:, i)) .gt. (L-thermal_skin)) then !.and. ((v(1, i) > 0.0) .or. (v(2,i) > 0.0) .or. (v(3, i) > 0.0)) then
             !print*, 'Aplica pared externa', i
             
             fac= SQRT(T)
             r_perp(:) =  -r(:,i)/SQRT(dot_product( r(:,i),r(:,i) ) )
-            v_par = dot_product(r_perp(:),v(:,i))
+            v_perp = dot_product(r_perp(:),v(:,i))
 
-            if (v_par<0) then
+            if (v_perp .lt. 0.0) then
 
                 r_par1(:)= cross_product(r_perp(:),v(:,i)) 
                 r_par1(:)= r_par1(:)/SQRT(dot_product( r_par1(:),r_par1(:) ) )
@@ -50,14 +50,14 @@ end interface
         endif
       
 !Nanoparticle ratio R_NP, temperature T_NP, thermal_skin
-        if  (norm2(r(:,i)) < (R_NP + thermal_skin)) then !.and. ((v(1,i) < 0.0) .or. (v(2,i) < 0.0) .or. (v(3,i) < 0.0)) then
+        if  (norm2(r(:,i)) .lt. (R_NP + thermal_skin)) then !.and. ((v(1,i) < 0.0) .or. (v(2,i) < 0.0) .or. (v(3,i) < 0.0)) then
             !print*, 'Aplica pared NP', i
 
             fac_NP = sqrt(T_NP)
             r_perp_NP(:) = r(:,i)/sqrt(dot_product( r(:,i),r(:,i)))
-            v_par = dot_product(r_perp(:),v(:,i))
+            v_perp_NP = dot_product(r_perp_NP(:),v(:,i))
 
-            if (v_par<0) then
+            if (v_perp_NP .lt. 0.0) then
             
                 r_par1_NP(:) = cross_product(r_perp_NP(:), v(:,i))
                 r_par1_NP(:) = r_par1_NP(:)/sqrt(dot_product(r_par1_NP(:), r_par1_NP(:)))

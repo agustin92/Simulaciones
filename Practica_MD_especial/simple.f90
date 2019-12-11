@@ -6,7 +6,7 @@ implicit none
 logical :: es, inp, inp_vel
 integer :: seed,i ,j,k,ither, i_est
 integer(kind=8) :: a, b, c, mc, n_iteracion
-real(kind=8) :: per, presion_mean, presion2_mean, dist
+real(kind=8) :: per, presion_mean, presion2_mean, dist, r_aux(3), r_norm_aux
 real(kind=8) :: l_aux, ratio, colatitud, azimutal, v_colatitud, v_azimutal
 real(kind=8) , parameter :: pi = 3.1415927
 
@@ -62,24 +62,30 @@ real(kind=8) , parameter :: pi = 3.1415927
 
 #ifdef mode_spherical
     else 
-       print*, 'Creo inputs aleatorios...'
-       print *, '...para caja esférica de radio L, con NP en el centro de radio R_NP'
+        print*, 'Creo inputs aleatorios...'
+        print *, '...para caja esférica de radio L, con NP en el centro de radio R_NP'
     
-       l_aux = L-R_NP
-       do a = 1, N
+        l_aux = L-R_NP
+        do a = 1, N
+        
+            colatitud = uni()*pi
+            azimutal = uni()*2*pi
+            ratio = uni()*l_aux + R_NP
 
-          colatitud = uni()*pi
-          azimutal = uni()*2*pi
-          ratio = uni()*l_aux + R_NP
+            r(1,a) = ratio*SIN(colatitud)*COS(azimutal) 
+            r(2,a) = ratio*SIN(colatitud)*SIN(azimutal)
+            r(3,a) = ratio*COS(colatitud)
 
-          r(1,a) = ratio*SIN(colatitud)*COS(azimutal) 
-          r(2,a) = ratio*SIN(colatitud)*SIN(azimutal)
-          r(3,a) = ratio*COS(colatitud)
+!            r_aux(1)  = L*uni()
+!            r_aux(2)  = L*uni()
+!            r_aux(3)  = L*uni()
+!            if (r_norm_aux .lt. L .and. r_norm_aux .gt. R_NP) then
+!                r(:,a) = r_aux(:)
+!            end if
 
-
-          v(1,a) = SQRT(T)*rnor()          
-          v(2,a) = SQRT(T)*rnor()
-          v(3,a) = SQRT(T)*rnor()
+            v(1,a) = SQRT(T)*rnor()          
+            v(2,a) = SQRT(T)*rnor()
+            v(3,a) = SQRT(T)*rnor()
 
        end do
 #endif   
