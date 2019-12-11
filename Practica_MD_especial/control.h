@@ -10,10 +10,10 @@
 #undef mode_box
 
 /* Rutina de inicializacion del sistema para evitar solapamiento de particulas */
-#define initialize
+#undef initialize
 
 /* Velocitiy verlet */
-#undef velocity_verlet
+#define velocity_verlet
 
 /* Grabar la secuencia de posiciones para vmd */
 #define movie 

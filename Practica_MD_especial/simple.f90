@@ -76,7 +76,6 @@ real(kind=8) , parameter :: pi = 3.1415927
           r(2,a) = ratio*SIN(colatitud)*SIN(azimutal)
           r(3,a) = ratio*COS(colatitud)
 
-          print *, 'Esta dentro de la caja y fuera de la NP?', L, R_NP, norm2(r(:,a))
 
           v(1,a) = SQRT(T)*rnor()          
           v(2,a) = SQRT(T)*rnor()
@@ -165,7 +164,7 @@ per = 10.0
                 print *, 'Simulacion completada en: ', per,'%'
                 per = per + 10
         end if
-        if (mod(mc, 1000) .eq. 0) then
+        if (mod(mc, 500) .eq. 0) then
             call kinetic()
             call write_parameters(1,mc)
             presion_ac = presion_ac + presion
