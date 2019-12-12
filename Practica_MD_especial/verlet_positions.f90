@@ -3,8 +3,8 @@ module verlet_positions
 implicit none
 real(kind=8), dimension(:,:), allocatable :: r, v, f, force_langevin
 real(kind=8) :: L, energy_pot, energy_cin, presion, temp_md, dt, T, langevin_gamma, presion_ac,presion2_ac, temp_ac
-real(kind=8) :: R_NP, T_NP, thermal_skin, sigma_NP, epsilon_NP, Temp_est(450), Temp_est_ac(450)
-real(kind=8) :: Dens_est(450), Dens_est_ac(450)
+real(kind=8) :: R_NP, T_NP, thermal_skin, sigma_NP, epsilon_NP, Temp_est(100), Temp_est_ac(100)
+real(kind=8) :: Dens_est(100), Dens_est_ac(100)
 integer(kind=8) :: N, n_mc
 contains
 

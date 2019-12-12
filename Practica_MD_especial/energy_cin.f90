@@ -3,14 +3,14 @@ use verlet_positions
 implicit none
 integer(kind=8) :: i, j , nbin
 real(kind=8) :: energy_aux, bin_size, r_norm, vb
-real(kind=8) :: cont(450), Temp_est_aux(450), Dens_est_aux(450)
+real(kind=8) :: cont(100), Temp_est_aux(100), Dens_est_aux(100)
 
 !allocate (cont(450))
 !allocate (Temp_est_aux(450))
 !allocate (Dens_est_aux(450))
 
 energy_aux = 0.0
-bin_size = (L-R_NP)/450.0
+bin_size = (L-R_NP)/100.0
 cont = 0.000
 Temp_est_aux = 0.0
 Dens_est_aux = 0.0
@@ -24,7 +24,7 @@ do i = 1, N
     cont(nbin) = cont(nbin) + 1.0
 end do
 
-do j = 1, 450
+do j = 1, 100
     if (cont(j) .gt. 0) then
         Temp_est_aux(j) = Temp_est_aux(j)/(3.000*cont(j))
         vb = ((j+1+R_NP)**3.0-(j+R_NP)**3.0)*bin_size**3.0    

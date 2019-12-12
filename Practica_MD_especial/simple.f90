@@ -209,8 +209,8 @@ per = 10.0
 
     open(unit=23, file = 'perfiles.dat', status = 'unknown')
     write(23,*) 'Distacia_radial,Temperatura,Densidad'
-    do i_est = 1,450
-        dist = (L-R_NP)/450.0*(i_est-0.5)+R_NP
+    do i_est = 1,100
+        dist = (L-R_NP)/100.0*(i_est-0.5)+R_NP
         write(23,*) dist,',',Temp_est_ac(i_est)/n_iteracion,',',Dens_est_ac(i_est)/n_iteracion
     end do
     close(23)
