@@ -27,7 +27,7 @@ end do
 do j = 1, 100
     if (cont(j) .gt. 0) then
         Temp_est_aux(j) = Temp_est_aux(j)/(3.000*cont(j))
-        vb = ((j+1+R_NP)**3.0-(j+R_NP)**3.0)*bin_size**3.0    
+        vb = 4.0/3.0*3.1415927*(((j+1)*bin_size+R_NP)**3.0-(j*bin_size+R_NP)**3.0)    
         Dens_est_aux(j) = cont(j)/vb
     end if
 end do

@@ -122,8 +122,6 @@ per = 10.0
         end if
         if (mod(mc, 1000) .eq. 0) then
             call write_parameters(1,mc)
-            presion_ac = presion_ac + presion
-            presion2_ac = presion2_ac + presion**2
             temp_ac = temp_ac + temp_md
             n_iteracion = n_iteracion + 1 
 #ifdef movie
@@ -173,8 +171,6 @@ per = 10.0
         if (mod(mc, 500) .eq. 0) then
             call kinetic()
             call write_parameters(1,mc)
-            presion_ac = presion_ac + presion
-            presion2_ac = presion2_ac + (N*temp_md/L**3 + 1.00/(3.000*L**3)*presion)**2
             temp_ac = temp_ac +temp_md
             Temp_est_ac(:) = Temp_est_ac(:) + Temp_est(:) 
             Dens_est_ac(:) = Dens_est_ac(:) + Dens_est(:)
@@ -201,8 +197,8 @@ per = 10.0
     open(unit=22, file = 'mean_measurement.dat', status = 'unknown')
 
 
-    presion_mean = dble(N)*(temp_ac/dble(n_iteracion))/L**3 + 1.0000/(3.000*L**3)*(presion_ac/dble(n_iteracion))
-    presion2_mean = presion2_ac/n_iteracion   
+    presion_mean = 0
+    presion2_mean = 0
     write(22,*) 'densidad,temperatura_in,presion_mean,presion2_mean,var,temp_mean'
     write(22,*) N/L**3,',',T,',',presion_mean,',',presion2_mean,',',sqrt(presion2_mean-(presion_mean)**2),',',temp_ac/n_iteracion
     close(22)
