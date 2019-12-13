@@ -11,7 +11,7 @@ real(kind=8) :: cont(100), Temp_est_aux(100), Dens_est_aux(100)
 
 energy_aux = 0.0
 bin_size = (L-R_NP)/100.0
-cont = 0.000
+cont = 0.0
 Temp_est_aux = 0.0
 Dens_est_aux = 0.0
 temp_md = 0.0
@@ -27,7 +27,7 @@ end do
 do j = 1, 100
     if (cont(j) .gt. 0) then
         Temp_est_aux(j) = Temp_est_aux(j)/(3.000*cont(j))
-        vb = 4.0/3.0*3.1415927*(((j+1)*bin_size+R_NP)**3.0-(j*bin_size+R_NP)**3.0)    
+        vb = 4.0*3.1415927*(((dble(j))*bin_size+R_NP)**3.0-(dble(j-1)*bin_size+R_NP)**3.0)/3.0    
         Dens_est_aux(j) = cont(j)/vb
     end if
 end do
@@ -36,6 +36,6 @@ end do
 Temp_est(:) = Temp_est_aux(:)
 Dens_est(:) = Dens_est_aux(:)
 energy_cin = energy_aux
-temp_md = energy_aux*2.0/(3.00*N)
+temp_md = energy_aux*2.0/(3.00*dble(N))
 
 end subroutine
