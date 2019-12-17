@@ -106,7 +106,7 @@ def plot_density(path_directory):
     
 #%%
 
-path_directory = '/home/luciana/Downloads/Simulaciones-master/Practica_MD_especial/Temperaturas_epsilon_0'
+path_directory = '/home/agustin/Documents/Materia/Simulaciones/Practica_MD_especial/hola'
 
 plot_temperature(path_directory)
 plot_density(path_directory)
